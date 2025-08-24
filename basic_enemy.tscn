@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpfmb1jollxg1"]
+
+[ext_resource type="Texture2D" uid="uid://c8er5wb3roeqk" path="res://assets/basic-enemy.png" id="1_naotq"]
+[ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://basic_enemy.gd" id="2_rwafm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rwafm"]
+atlas = ExtResource("1_naotq")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_m2rku"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rwafm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="BasicEnemy" type="AnimatedSprite2D" groups=["enemy"]]
+sprite_frames = SubResource("SpriteFrames_m2rku")
+centered = false
+script = ExtResource("2_rwafm")
