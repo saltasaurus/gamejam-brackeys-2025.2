@@ -1,5 +1,5 @@
 class_name Enemy
-extends Node
+extends Node2D
 
-func take_action() -> EntityAction:
+func take_action(_game: Game) -> EntityAction:
 	return null
