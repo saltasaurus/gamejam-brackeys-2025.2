@@ -7,7 +7,7 @@ func take_action(game: Game) -> EntityAction:
 	if path.size() == 2:
 		# Adjacent to player
 		action.type = EntityAction.Type.ATTACK
-		action.move_dir = (path[1] - path[0]).normalized()
+		action.attack_dir = (path[1] - path[0]).normalized()
 		print("attack")
 	elif path.size() > 2:
 		action.type = EntityAction.Type.MOVE
