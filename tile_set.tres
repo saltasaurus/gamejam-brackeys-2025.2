@@ -1,0 +1,16 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://dfgo1rhd0legl"]
+
+[ext_resource type="Texture2D" uid="uid://cgk82xoy27i7q" path="res://assets/tiles.png" id="1_kfwk1"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e2o6t"]
+texture = ExtResource("1_kfwk1")
+texture_region_size = Vector2i(10, 10)
+0:0/0 = 0
+0:0/0/custom_data_0 = true
+1:0/0 = 0
+
+[resource]
+tile_size = Vector2i(10, 10)
+custom_data_layer_0/name = "is_wall"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_e2o6t")
