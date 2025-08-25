@@ -1,9 +1,9 @@
 class_name EntityAction
 
 enum Type {
-	NONE,
-	MOVE,
-	ATTACK,
+    NONE,
+    MOVE,
+    ATTACK,
 }
 
 var type: Type
