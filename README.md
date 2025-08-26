@@ -5,3 +5,5 @@
 ## References
 
 [Map Generation](https://gameidea.org/2025/01/20/procedural-cave-generation-in-godot-2d/)
+
+[Character Stat Sytem](https://minoqi.vercel.app/posts/godot-4-tutorials/stat-system-godot-4-tutorial/)
