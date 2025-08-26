@@ -9,4 +9,3 @@ func _ready() -> void:
 	print("Health: ", stats.health.adjustedValue) 
 	print("Strength: ", stats.strength.adjustedValue)
 	print("Speed: ", stats.speed.adjustedValue)
-		
