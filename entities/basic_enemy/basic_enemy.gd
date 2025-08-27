@@ -1,6 +1,6 @@
 extends Enemy
 
-func take_action(game: Game) -> EntityAction:
+func take_action(game: World) -> EntityAction:
 	var path: PackedVector2Array = game.pathfind(position, game.player.position)
 	var action = EntityAction.new()
 

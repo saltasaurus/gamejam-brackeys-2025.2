@@ -1,25 +1,64 @@
-[gd_scene load_steps=7 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=12 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
+[ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://iu2i20icpjiu" path="res://entities/player/player.tscn" id="2_p57ef"]
+[ext_resource type="Script" uid="uid://bnhiujpo84owt" path="res://scenes/world.gd" id="2_u5sy4"]
 [ext_resource type="Resource" uid="uid://bn8vsvbwt7k8d" path="res://entities/player/player_stats.tres" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://dpfmb1jollxg1" path="res://entities/basic_enemy/basic_enemy.tscn" id="3_u5sy4"]
 [ext_resource type="Script" uid="uid://ddsmk3umtytif" path="res://scripts/map.gd" id="5_0tnpc"]
 [ext_resource type="TileSet" uid="uid://hennwlx7g0g4" path="res://assets/biscuit_tiles.tres" id="5_p57ef"]
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_gee14"]
+viewport_path = NodePath("World")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_vtaks"]
+viewport_path = NodePath("UIViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_u5sy4"]
+viewport_path = NodePath("SubViewport")
+
 [node name="Game" type="Node2D"]
 script = ExtResource("1_iywne")
 
-[node name="Player" parent="." instance=ExtResource("2_p57ef")]
+[node name="UIViewport" type="SubViewport" parent="."]
+size = Vector2i(80, 180)
+
+[node name="UI" parent="UIViewport" instance=ExtResource("2_0tnpc")]
+
+[node name="World" type="SubViewport" parent="."]
+size = Vector2i(240, 180)
+script = ExtResource("2_u5sy4")
+
+[node name="Player" parent="World" instance=ExtResource("2_p57ef")]
 position = Vector2(10, 10)
 stats = ExtResource("3_p57ef")
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="World/Player"]
 
-[node name="BasicEnemy" parent="." instance=ExtResource("3_u5sy4")]
+[node name="BasicEnemy" parent="World" instance=ExtResource("3_u5sy4")]
 position = Vector2(10, 50)
 
-[node name="ProcMap" type="TileMapLayer" parent="."]
+[node name="ProcMap" type="TileMapLayer" parent="World"]
 z_index = -1
 tile_set = ExtResource("5_p57ef")
 script = ExtResource("5_0tnpc")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(320, 180)
+
+[node name="WorldTexture" type="TextureRect" parent="SubViewport"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_gee14")
+
+[node name="UITexture" type="TextureRect" parent="SubViewport"]
+offset_left = 240.0
+offset_right = 320.0
+offset_bottom = 180.0
+texture = SubResource("ViewportTexture_vtaks")
+
+[node name="FrameBuffer" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_u5sy4")
