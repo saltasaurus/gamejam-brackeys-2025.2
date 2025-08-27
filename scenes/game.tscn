@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=14 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
@@ -8,6 +8,16 @@
 [ext_resource type="PackedScene" uid="uid://dpfmb1jollxg1" path="res://entities/basic_enemy/basic_enemy.tscn" id="3_u5sy4"]
 [ext_resource type="Script" uid="uid://ddsmk3umtytif" path="res://scripts/map.gd" id="5_0tnpc"]
 [ext_resource type="TileSet" uid="uid://hennwlx7g0g4" path="res://assets/biscuit_tiles.tres" id="5_p57ef"]
+[ext_resource type="Shader" uid="uid://cjygb6yl3te0b" path="res://shader/transition.gdshader" id="9_0tnpc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtaks"]
+shader = ExtResource("9_0tnpc")
+shader_parameter/AspectRatio = 1.0
+shader_parameter/Diamonds = 18.0
+shader_parameter/pixel_size = 0.08
+shader_parameter/height = 1.0
+shader_parameter/disable_pixel = false
+shader_parameter/final_color = Color(0.133333, 0.137255, 0.137255, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_gee14"]
 viewport_path = NodePath("World")
@@ -43,6 +53,17 @@ position = Vector2(10, 50)
 z_index = -1
 tile_set = ExtResource("5_p57ef")
 script = ExtResource("5_0tnpc")
+
+[node name="EffectsCanvas" type="CanvasLayer" parent="World"]
+
+[node name="Transition" type="ColorRect" parent="World/EffectsCanvas"]
+material = SubResource("ShaderMaterial_vtaks")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.133333, 0.137255, 0.137255, 1)
 
 [node name="SubViewport" type="SubViewport" parent="."]
 size = Vector2i(320, 180)

@@ -60,9 +60,18 @@ func update_world():
 					move_entity(enemy, action.move_dir)
 
 func load_next_level():
-	map.generate()
+	var transition: ColorRect = $EffectsCanvas/Transition
+
+	var tween = get_tree().create_tween()
+	tween.tween_property(transition, "material:shader_parameter/height", 1, 1)
+	await tween.finished
 	
+	map.generate()
 	player.position = map.start_point * tile_size
 	_snap_entity_pos(player)
 	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Node2D]):
 		_snap_entity_pos(e)
+
+	tween = get_tree().create_tween()
+	tween.tween_property(transition, "material:shader_parameter/height", -1, 1)
+	await tween.finished

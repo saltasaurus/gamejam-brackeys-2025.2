@@ -45,6 +45,7 @@ texture = ExtResource("3_yev5y")
 stretch_mode = 2
 
 [node name="Damage" type="Label" parent="."]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 10.0
 offset_right = 60.0
