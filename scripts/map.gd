@@ -24,8 +24,8 @@ var end_point: Vector2i
 var pathfinding: AStar2D
 
 func generate():
-	start_point = Vector2i(1, 1)
-	end_point = Vector2i(8, 8)
+	start_point = Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
+	end_point = Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
 
 	var valid := false
 

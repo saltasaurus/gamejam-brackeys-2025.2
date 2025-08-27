@@ -7,6 +7,7 @@ const ENEMY_GROUP = "enemy"
 @onready var map: Map = $ProcMap
 
 var tile_size = 10
+var paused: bool = false
 
 func _ready() -> void:
 	load_next_level()
@@ -15,6 +16,9 @@ func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
 	
 func _unhandled_input(event):
+	if paused:
+		return
+	
 	if event.is_action_pressed("move_left"):
 		move_player(Vector2.LEFT)
 	elif event.is_action_pressed("move_right"):
@@ -60,6 +64,7 @@ func update_world():
 					move_entity(enemy, action.move_dir)
 
 func load_next_level():
+	paused = true
 	var transition: ColorRect = $EffectsCanvas/Transition
 
 	var tween = get_tree().create_tween()
@@ -75,3 +80,4 @@ func load_next_level():
 	tween = get_tree().create_tween()
 	tween.tween_property(transition, "material:shader_parameter/height", -1, 1)
 	await tween.finished
+	paused = false
