@@ -9,11 +9,7 @@ const ENEMY_GROUP = "enemy"
 var tile_size = 10
 
 func _ready() -> void:
-	map.generate()
-	
-	_snap_entity_pos(player)
-	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Node2D]):
-		_snap_entity_pos(e)
+	load_next_level()
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -30,7 +26,10 @@ func _unhandled_input(event):
 	
 func move_player(dir):
 	if move_entity(player, dir):
-		update_world()
+		if on_stairs(player):
+			load_next_level()
+		else:
+			update_world()
 
 func pathfind(start_world_pos: Vector2, goal_world_pos: Vector2) -> PackedVector2Array:
 	var start_id = map.pathfinding.get_closest_point(map.local_to_map(start_world_pos))
@@ -47,6 +46,9 @@ func move_entity(e: Node2D, dir: Vector2) -> bool:
 
 	return false
 
+func on_stairs(e: Node2D) -> bool:
+	return map.is_stairs(map.local_to_map(e.position))
+
 func update_world():
 	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
 	for e in enemies:
@@ -56,3 +58,11 @@ func update_world():
 			match action.type:
 				EntityAction.Type.MOVE:
 					move_entity(enemy, action.move_dir)
+
+func load_next_level():
+	map.generate()
+	
+	player.position = map.start_point * tile_size
+	_snap_entity_pos(player)
+	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Node2D]):
+		_snap_entity_pos(e)
