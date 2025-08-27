@@ -8,9 +8,10 @@ const ENEMY_GROUP = "enemy"
 
 var tile_size = 10
 var paused: bool = false
+var player_floor = 1
 
 func _ready() -> void:
-	load_next_level()
+	setup_world()
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -63,6 +64,13 @@ func update_world():
 				EntityAction.Type.MOVE:
 					move_entity(enemy, action.move_dir)
 
+func setup_world():
+	map.generate()
+	player.position = map.start_point * tile_size
+	_snap_entity_pos(player)
+	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Node2D]):
+		_snap_entity_pos(e)
+
 func load_next_level():
 	paused = true
 	var transition: ColorRect = $EffectsCanvas/Transition
@@ -71,11 +79,8 @@ func load_next_level():
 	tween.tween_property(transition, "material:shader_parameter/height", 1, 1)
 	await tween.finished
 	
-	map.generate()
-	player.position = map.start_point * tile_size
-	_snap_entity_pos(player)
-	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Node2D]):
-		_snap_entity_pos(e)
+	setup_world()
+	player_floor += 1
 
 	tween = get_tree().create_tween()
 	tween.tween_property(transition, "material:shader_parameter/height", -1, 1)

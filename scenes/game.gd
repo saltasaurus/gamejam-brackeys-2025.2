@@ -1,7 +1,8 @@
 class_name Game
 extends Node2D
 
-@onready var world_viewport = $World
+@onready var world = $World
+@onready var ui: UI = $UIViewport/UI
 @onready var frame_buffer := $FrameBuffer
 
 const INTERNAL_RESOLUTION = Vector2i(160, 90)
@@ -9,6 +10,7 @@ const INTERNAL_RESOLUTION = Vector2i(160, 90)
 func _ready() -> void:
     _update_scale()
     get_viewport().connect("size_changed", _update_scale)
+    ui.world = world
 
 func _update_scale():
     var window_size = get_viewport().size
@@ -24,4 +26,4 @@ func _update_scale():
     frame_buffer.position = (window_size - new_size) / 2
 
 func _unhandled_input(event):
-    world_viewport.push_input(event)
+    world.push_input(event)

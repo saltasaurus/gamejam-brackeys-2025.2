@@ -15,7 +15,7 @@ shader = ExtResource("9_0tnpc")
 shader_parameter/AspectRatio = 1.0
 shader_parameter/Diamonds = 18.0
 shader_parameter/pixel_size = 0.08
-shader_parameter/height = 1.0
+shader_parameter/height = -1.0
 shader_parameter/disable_pixel = false
 shader_parameter/final_color = Color(0.133333, 0.137255, 0.137255, 1)
 
