@@ -1,0 +1,15 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://hennwlx7g0g4"]
+
+[ext_resource type="Texture2D" uid="uid://bla03ii3vqtkc" path="res://assets/biscuit_wall_floor.png" id="2_6gawm"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b4n3o"]
+texture = ExtResource("2_6gawm")
+texture_region_size = Vector2i(10, 10)
+0:0/0 = 0
+1:0/0 = 0
+
+[resource]
+tile_size = Vector2i(10, 10)
+custom_data_layer_0/name = "is_wall"
+custom_data_layer_0/type = 1
+sources/0 = SubResource("TileSetAtlasSource_b4n3o")
