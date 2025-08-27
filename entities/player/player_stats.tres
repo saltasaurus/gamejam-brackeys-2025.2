@@ -1,26 +1,32 @@
-[gd_resource type="Resource" script_class="CharacterStats" load_steps=6 format=3 uid="uid://bn8vsvbwt7k8d"]
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=7 format=3 uid="uid://bn8vsvbwt7k8d"]
 
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="2_vxqng"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="3_s7xvw"]
 
+[sub_resource type="Resource" id="Resource_vxqng"]
+script = ExtResource("3_s7xvw")
+baseValue = 0
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
 [sub_resource type="Resource" id="Resource_vek3w"]
 script = ExtResource("3_s7xvw")
-baseValue = 50.0
+baseValue = 10
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
 [sub_resource type="Resource" id="Resource_b7y3b"]
 script = ExtResource("3_s7xvw")
-baseValue = 0.0
+baseValue = 0
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
 [sub_resource type="Resource" id="Resource_47grb"]
 script = ExtResource("3_s7xvw")
-baseValue = 5.0
+baseValue = 0
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
 [resource]
 script = ExtResource("2_vxqng")
 health = SubResource("Resource_vek3w")
 strength = SubResource("Resource_47grb")
+defense = SubResource("Resource_vxqng")
 speed = SubResource("Resource_b7y3b")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"

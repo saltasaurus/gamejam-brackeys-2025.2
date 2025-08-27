@@ -2,24 +2,22 @@ extends Resource
 class_name Stat
 
 #region Variables
-@export var baseValue : float = 0
+@export var baseValue : int
 
 var statModifiers : Array[StatModifier] = []
-var adjustedValue : float = 0
+var adjustedValue : int = baseValue
 #endregion
 
 #region Signals
 signal stat_adjusted(_stat : Stat)
 #endregion
 
-func initialize() -> void:
+func _init() -> void:
 	adjustedValue = baseValue
-
 
 func add_stat_modifier(_newStatModifier : StatModifier) -> void:
 	statModifiers.append(_newStatModifier)
 	_calculate_stat_modifiers()
-
 
 func add_temp_stat_modifier(_newTempStatModifier : StatModifier, _tempStatManager : TempStatManager) -> void:
 	statModifiers.append(_newTempStatModifier)
@@ -27,17 +25,14 @@ func add_temp_stat_modifier(_newTempStatModifier : StatModifier, _tempStatManage
 	_tempStatManager.add_temp_stat(_newTempStatModifier)
 	_calculate_stat_modifiers()
 
-
 func remove_stat_modifier(_modifierToRemove : StatModifier) -> void:
 	statModifiers.erase(_modifierToRemove)
 	_calculate_stat_modifiers()
-
 
 func remove_temp_stat_modifier(_modifierToRemove : StatModifier) -> void:
 	statModifiers.erase(_modifierToRemove)
 	_modifierToRemove.modifier_over.disconnect(remove_stat_modifier)
 	_calculate_stat_modifiers()
-
 
 func _calculate_stat_modifiers() -> void:
 	adjustedValue = baseValue

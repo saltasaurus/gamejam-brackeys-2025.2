@@ -13,7 +13,7 @@ enum StatModifierType {
 	PERCENT_DIVIDE
 }
 
-var value : float = 0
+var value : int = 0
 var modifierType : StatModifierType
 var duration : float = 0 : set = set_duration
 #endregion
@@ -31,7 +31,7 @@ func set_duration(_newDuration : float) -> void:
 		duration = _newDuration
 #endregion
 
-func initialize(_value : float, _modifierType : StatModifierType, _duration : float = 0) -> void:
+func initialize(_value : int, _modifierType : StatModifierType, _duration : float = 0) -> void:
 	value = _value
 	modifierType = _modifierType
 	duration = _duration
