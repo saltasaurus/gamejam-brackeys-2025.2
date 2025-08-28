@@ -35,7 +35,9 @@ func _unhandled_input(event):
 		move_player(Vector2.DOWN)
 	
 func move_player(dir):
-	if move_entity(player, dir):
+	if can_attack_enemy(player, dir):
+		print("CAN ATTACK ENEMY")
+	elif move_entity(player, dir):
 		if on_stairs(player):
 			load_next_level()
 		else:
@@ -46,12 +48,23 @@ func pathfind(start_world_pos: Vector2, goal_world_pos: Vector2) -> PackedVector
 	var goal_id = map.pathfinding.get_closest_point(map.local_to_map(goal_world_pos))
 	return map.pathfinding.get_point_path(start_id, goal_id)
 
-func move_entity(e: Node2D, dir: Vector2) -> bool:
+func can_attack_enemy(entity: Node2D, dir: Vector2) -> bool:
 	var movement: Vector2 = dir * tile_size
-	var next_position = e.position + movement
+	var next_position = entity.position + movement
+	var loc2map_pos = map.local_to_map(next_position)
+	
+	for enemy in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
+		var enemy_pos: Vector2i = enemy.position.floor()
+		if enemy_pos == loc2map_pos:
+			return true
+	return false
 
+func move_entity(entity: Node2D, dir: Vector2) -> bool:
+	var movement: Vector2 = dir * tile_size
+	var next_position = entity.position + movement
+	
 	if map.is_walkable(map.local_to_map(next_position)):
-		e.position = next_position
+		entity.position = next_position
 		return true
 
 	return false
@@ -73,8 +86,9 @@ func setup_world():
 	map.generate()
 	player.position = map.start_point * tile_size
 	_snap_entity_pos(player)
-	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Node2D]):
+	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
 		_snap_entity_pos(e)
+		
 
 func load_next_level():
 	paused = true

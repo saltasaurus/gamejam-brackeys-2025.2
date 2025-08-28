@@ -25,4 +25,4 @@ func _on_card_selected(card_mods: Array[StatModifier]) -> void:
 		stats.update_stat(stat_mod, tempStatManager)
 	
 	EventManager.emit_signal("player_stats_updated", stats)
-		
+	
