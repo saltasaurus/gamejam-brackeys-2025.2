@@ -141,7 +141,7 @@ func setup_world():
 	# Hacky way to clear world between levels
 	for e in get_children():
 		if e is Chest:
-			e.queue_free()
+			e.free()
 
 	map.generate(1)
 
@@ -158,9 +158,9 @@ func setup_world():
 	camera.position = player.position
 
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
-		if is_instance_valid(e):
-			map.occupy(e.position, e)
-			_snap_entity_pos(e)
+		map.occupy(e.position, e)
+		_snap_entity_pos(e)
+
 
 func load_next_level():
 	paused = true
