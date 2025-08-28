@@ -104,8 +104,7 @@ func update_world():
 			EntityAction.Type.MOVE:
 				move_entity(enemy, action.move_dir)
 			EntityAction.Type.ATTACK_MELEE:
-				# Add short delay to prevent enemy attacking instantly
-				await get_tree().create_timer(0.5).timeout
+				await get_tree().create_timer(0.1).timeout
 				# TODO - Technically this should get the entity in direction `action.attack_dir`
 				await attack_melee(enemy, player, action.attack_dir)
 

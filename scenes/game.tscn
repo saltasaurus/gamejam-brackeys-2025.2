@@ -78,6 +78,9 @@ stats = SubResource("Resource_ca42v")
 [node name="BasicEnemy" parent="World" instance=ExtResource("3_u5sy4")]
 position = Vector2(10, 50)
 
+[node name="BasicEnemy2" parent="World" instance=ExtResource("3_u5sy4")]
+position = Vector2(50, 40)
+
 [node name="ProcMap" type="TileMapLayer" parent="World"]
 z_index = -1
 tile_set = ExtResource("5_p57ef")
