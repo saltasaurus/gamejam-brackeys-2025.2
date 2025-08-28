@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=23 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
@@ -12,6 +12,7 @@
 [ext_resource type="Shader" uid="uid://cjygb6yl3te0b" path="res://shader/transition.gdshader" id="9_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://bhn6k1e3wei8k" path="res://scenes/level_transition.tscn" id="11_kvpfn"]
 [ext_resource type="Script" uid="uid://c4wbgsyj6h8wx" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
+[ext_resource type="PackedScene" uid="uid://tn2gj6kaix4u" path="res://entities/chest/Chest.tscn" id="12_kvuet"]
 
 [sub_resource type="Resource" id="Resource_dinhu"]
 script = ExtResource("5_vtaks")
@@ -116,6 +117,9 @@ color = Color(0.133333, 0.137255, 0.137255, 1)
 
 [node name="Camera" type="Camera2D" parent="World"]
 position = Vector2(10, 10)
+
+[node name="Chest" parent="World" instance=ExtResource("12_kvuet")]
+position = Vector2(50, 50)
 
 [node name="SubViewport" type="SubViewport" parent="."]
 size = Vector2i(320, 180)

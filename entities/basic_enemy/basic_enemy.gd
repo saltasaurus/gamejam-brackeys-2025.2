@@ -4,6 +4,8 @@ func take_action(game: World) -> EntityAction:
 	var path: PackedVector2Array = game.pathfind(position, game.player.position)
 	var action = EntityAction.new()
 
+	print(path)
+
 	# TODO - Should technically check if player is adjacent
 	var dir = game.get_adjacent_player_dir(self.position)
 	if dir != Vector2.ZERO:

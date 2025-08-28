@@ -48,7 +48,7 @@ defense = SubResource("Resource_4qd2v")
 speed = SubResource("Resource_e4w74")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"
 
-[node name="BasicEnemy" type="AnimatedSprite2D" groups=["enemy"]]
+[node name="BasicEnemy" type="AnimatedSprite2D" groups=["enemy", "entity"]]
 sprite_frames = SubResource("SpriteFrames_m2rku")
 centered = false
 script = ExtResource("2_rwafm")

@@ -20,6 +20,8 @@ func _ready() -> void:
 	health = stats.health.baseValue
 
 	health_updated.emit.call_deferred(health)
+	
+	add_to_group("entity")
 
 func play_melee_attack_anim(dir: Vector2) -> void:
 	var original_pos = position

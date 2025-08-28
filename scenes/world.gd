@@ -2,6 +2,7 @@ class_name World
 extends SubViewport
 
 const ENEMY_GROUP = "enemy"
+const ENTITY_GROUP = "entity"
 
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
 
@@ -49,11 +50,15 @@ func _unhandled_input(event):
 		move_player(Vector2.DOWN)
 
 func move_player(dir):
-	var enemy = get_adjacent_enemy(player.position, dir)
+	var entity = get_adjacent_entity(player.position, dir)
 	var _update_world = false
-	if enemy != null:
-		await attack_melee(player, enemy, dir)
-		_update_world = true
+	if entity != null:
+		if entity is Enemy:
+			await attack_melee(player, entity, dir)
+			_update_world = true
+		if entity is Interactable:
+			(entity as Interactable).interact(player)
+			_update_world = true
 	elif move_entity(player, dir):
 		camera.position = player.position
 		if on_stairs(player):
@@ -97,7 +102,6 @@ func move_entity(entity: Node2D, dir: Vector2) -> bool:
 		map.occupy(next_position, entity)
 		map.vacate(entity.position)
 		entity.position = next_position
-
 		return true
 
 	return false
@@ -107,6 +111,7 @@ func on_stairs(e: Node2D) -> bool:
 
 func update_world():
 	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
+
 	for e in enemies:
 		if not is_instance_valid(e):
 			continue
@@ -130,13 +135,12 @@ func update_world():
 
 func setup_world():
 	map.generate()
-	# player.position = map.start_point * tile_size
-	_snap_entity_pos(player)
-	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
-		_snap_entity_pos(e)
-		map.occupy(e.position, e)
+	player.position = map.start_point * tile_size
 	camera.position = player.position
-	map.occupy(player.position, player)
+
+	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
+		map.occupy(e.position, e)
+		_snap_entity_pos(e)
 
 func load_next_level():
 	paused = true
