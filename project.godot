@@ -15,12 +15,17 @@ run/main_scene="uid://by7napo7uhogq"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://assets/icon.svg"
 
+[autoload]
+
+EventManager="*res://scripts/EventManager.gd"
+
 [display]
 
 window/size/viewport_width=1600
 window/size/viewport_height=900
 window/size/window_width_override=1600
 window/size/window_height_override=900
+window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
 [global_group]

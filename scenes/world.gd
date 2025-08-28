@@ -80,12 +80,10 @@ func load_next_level():
 	paused = true
 	var transition: ColorRect = $EffectsCanvas/Transition
 
-	var tween = get_tree().create_tween()
-	tween.tween_property(transition, "material:shader_parameter/height", 1, 1)
-	await tween.finished
+	wait_for_transition(transition, 1, 1)
 
 	# TODO: Real card selection logic
-	select_cards = player_floor % 3 == 0
+	select_cards = player_floor % 1 == 0
 
 	if select_cards:
 		cards_canvas.visible = true
@@ -102,7 +100,7 @@ func load_next_level():
 		var m1 = CardModifier.new()
 		m1.duration_floors = duration
 		m1.modifiers.push_back(s1)
-		m1.modifiers.push_back(s1)
+		#m1.modifiers.push_back(s1)
 
 		var modifiers: Array[CardModifier] = []
 		modifiers.push_back(m1)
@@ -111,22 +109,26 @@ func load_next_level():
 
 		cards.show_cards(modifiers)
 
-		tween = get_tree().create_tween()
-		tween.tween_property(transition, "material:shader_parameter/height", -1, 1)
-		await tween.finished
+		wait_for_transition(transition, -1, 1)
 
-		# TODO: Apply to player
-		var modifier = await cards.selected
+		var card_modifier: CardModifier = await cards.selected
+		
+		# Only need to send Array[StatModifiers] bc duration is set above
+		# Player updates stats by connecting to this signal
+		EventManager.emit_signal("card_selected", card_modifier.modifiers)
 
-		tween = get_tree().create_tween()
-		tween.tween_property(transition, "material:shader_parameter/height", 1, 1)
-		await tween.finished
+		wait_for_transition(transition, 1, 1)
 
 	cards_canvas.visible = false
 	setup_world()
 	player_floor += 1
+	# Tell UI to update
+	EventManager.emit_signal("level_passed", player_floor)
 
-	tween = get_tree().create_tween()
-	tween.tween_property(transition, "material:shader_parameter/height", -1, 1)
-	await tween.finished
+	wait_for_transition(transition, -1, 1)
 	paused = false
+
+func wait_for_transition(transition: ColorRect, final_val: Variant, duration: float) -> void:
+	var tween = get_tree().create_tween()
+	tween.tween_property(transition, "material:shader_parameter/height", final_val, duration)
+	await tween.finished

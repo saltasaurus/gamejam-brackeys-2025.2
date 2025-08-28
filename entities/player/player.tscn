@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://iu2i20icpjiu"]
+[gd_scene load_steps=4 format=3 uid="uid://iu2i20icpjiu"]
 
 [ext_resource type="Texture2D" uid="uid://dp6egoyyrp2eh" path="res://assets/player.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://dl74rdbp0k6se" path="res://entities/player/player.gd" id="1_onrkg"]
+[ext_resource type="Script" uid="uid://c2blxx7evoghv" path="res://scripts/stats/temp_stats_manager.gd" id="3_sglur"]
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_onrkg")
@@ -9,3 +10,7 @@ script = ExtResource("1_onrkg")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_4flbx")
 centered = false
+
+[node name="StatManager" type="Node" parent="."]
+script = ExtResource("3_sglur")
+metadata/_custom_type_script = "uid://c2blxx7evoghv"

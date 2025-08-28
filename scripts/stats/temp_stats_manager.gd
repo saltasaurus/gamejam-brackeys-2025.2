@@ -5,26 +5,30 @@ class_name TempStatManager
 var tempStats : Array[StatModifier]
 #endregion
 
+func _ready() -> void:
+	EventManager.connect("level_passed", _on_next_level)
+
+## Adds a stat modifier for the given duration
 func add_temp_stat(_newTempStatModifier : StatModifier) -> void:
 	if _newTempStatModifier.duration > 0:
 		tempStats.append(_newTempStatModifier)
 		return
 	printerr("ERROR: Tried to add a temp stat modifier to StatManager that was not a temp stat modifier")
 	
-func _process(delta: float) -> void:
-	# TODO: This uses _process and delta time to determine temp stat lifetimes.
-	# However, we use a "turn-based" movement system, and as such should reflect that
-	# By only removing time during a movement (maybe a signal?)
-	
+func _on_next_level(_level: int) -> void:
+	print("Next level")
 	var statsToRemove : Array[StatModifier] = []
 	
 	for tempStat in tempStats:
-		tempStat.duration -= get_process_delta_time()
-		
-		if tempStat.duration <= 0:
+		tempStat.duration -= 1
+		# Level update happens first, so remove after the current level
+		if tempStat.duration < 0:
 			statsToRemove.append(tempStat)
+		else:
+			print("+",tempStat.value, " for ", tempStat.duration, " more floors")
 			
 	for statToRemove in statsToRemove:
 		tempStats.erase(statToRemove)
+		print("-", statToRemove.value, " next floor")
 		
 	statsToRemove.clear()

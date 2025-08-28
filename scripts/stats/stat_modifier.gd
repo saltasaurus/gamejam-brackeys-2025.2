@@ -24,8 +24,8 @@ signal modifier_over(_modifier : StatModifier)
 
 #region SET/GET
 func set_duration(_newDuration : float) -> void:
-	if _newDuration <= 0:
-		duration = 0
+	if _newDuration < 0:
+		duration = _newDuration
 		modifier_over.emit(self)
 	else:
 		duration = _newDuration
