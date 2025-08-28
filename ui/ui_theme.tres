@@ -5,3 +5,4 @@
 [resource]
 Label/font_sizes/font_size = 8
 Label/fonts/font = ExtResource("1_udl1o")
+VBoxContainer/constants/separation = 0

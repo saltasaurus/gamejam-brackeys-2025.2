@@ -1,8 +1,7 @@
-extends Object
 class_name StatModifier
 
 #region Variables
-enum StatModifierType {
+enum Type {
 	ADD, 
 	SUB,
 	MULT,
@@ -13,8 +12,9 @@ enum StatModifierType {
 	PERCENT_DIVIDE
 }
 
+var target: CharacterStats.Type
 var value : int = 0
-var modifierType : StatModifierType
+var type : Type
 var duration : float = 0 : set = set_duration
 #endregion
 
@@ -31,7 +31,7 @@ func set_duration(_newDuration : float) -> void:
 		duration = _newDuration
 #endregion
 
-func initialize(_value : int, _modifierType : StatModifierType, _duration : float = 0) -> void:
+func initialize(_value : int, _modifierType : Type, _duration : float = 0) -> void:
 	value = _value
-	modifierType = _modifierType
+	type = _modifierType
 	duration = _duration

@@ -1,6 +1,13 @@
 extends Resource
 class_name CharacterStats
 
+enum Type {
+	HEALTH,
+	STRENGTH,
+	DEFENSE,
+	SPEED
+}
+
 #region Variables
 @export var health: Stat
 @export var strength: Stat

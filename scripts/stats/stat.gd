@@ -38,22 +38,22 @@ func _calculate_stat_modifiers() -> void:
 	adjustedValue = baseValue
 
 	for statModifier in statModifiers:
-		match statModifier.modifierType:
-			StatModifier.StatModifierType.ADD:
+		match statModifier.type:
+			StatModifier.Type.ADD:
 				adjustedValue += statModifier.value
-			StatModifier.StatModifierType.SUB:
+			StatModifier.Type.SUB:
 				adjustedValue -= statModifier.value
-			StatModifier.StatModifierType.MULT:
+			StatModifier.Type.MULT:
 				adjustedValue *= statModifier.value
-			StatModifier.StatModifierType.DIVIDE:
+			StatModifier.Type.DIVIDE:
 				adjustedValue /= statModifier.value
-			StatModifier.StatModifierType.PERCENT_ADD:
+			StatModifier.Type.PERCENT_ADD:
 				adjustedValue += (adjustedValue * statModifier.value) / 100
-			StatModifier.StatModifierType.PERCENT_SUB:
+			StatModifier.Type.PERCENT_SUB:
 				adjustedValue -= (adjustedValue * statModifier.value) / 100
-			StatModifier.StatModifierType.PERCENT_MULT:
+			StatModifier.Type.PERCENT_MULT:
 				adjustedValue *= (adjustedValue * statModifier.value) / 100
-			StatModifier.StatModifierType.PERCENT_DIVIDE:
+			StatModifier.Type.PERCENT_DIVIDE:
 				adjustedValue /= (adjustedValue * statModifier.value) / 100
 	 
 	stat_adjusted.emit(self)	
