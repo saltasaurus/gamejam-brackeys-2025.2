@@ -85,7 +85,7 @@ func load_next_level():
 	await tween.finished
 
 	# TODO: Real card selection logic
-	select_cards = player_floor % 1 == 3
+	select_cards = player_floor % 3 == 0
 
 	if select_cards:
 		cards_canvas.visible = true
