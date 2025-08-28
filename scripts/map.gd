@@ -22,6 +22,7 @@ var start_point: Vector2i
 var end_point: Vector2i
 
 var pathfinding: AStar2D
+var occupied: Dictionary[Vector2i, Node] = {}
 
 func generate():
 	start_point = Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
@@ -130,7 +131,8 @@ func _apply_to_tilemap() -> void:
 
 func is_walkable(cell_pos: Vector2i) -> bool:
 	var data: TileData = get_cell_tile_data(cell_pos)
-	return not data or not data.get_custom_data("is_wall")
+	var is_wall = data != null and data.get_custom_data("is_wall")
+	return get_entity_at_cell(cell_pos) == null and not is_wall
 
 func is_stairs(cell_pos: Vector2i) -> bool:
 	var data: TileData = get_cell_tile_data(cell_pos)
@@ -155,3 +157,15 @@ func _build_pathfinding() -> void:
 			if i == j: continue
 			if pathfinding.get_point_position(i).distance_to(pathfinding.get_point_position(j)) == 1:
 				pathfinding.connect_points(i, j)
+
+func occupy(pos: Vector2, entity: Node) -> void:
+	occupied[local_to_map(pos)] = entity
+
+func vacate(pos: Vector2) -> void:
+	occupied.erase(local_to_map(pos))
+
+func get_entity(pos: Vector2) -> Node:
+	return occupied.get(local_to_map(pos), null)
+
+func get_entity_at_cell(cell: Vector2i) -> Node:
+	return occupied.get(cell, null)

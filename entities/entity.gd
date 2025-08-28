@@ -32,7 +32,6 @@ func play_melee_attack_anim(dir: Vector2) -> void:
 	tween.tween_property(self, "position", original_pos, 0.05)
 	await tween.finished
 
-
 func take_damage(damage: int) -> void:
 	if damage <= 0:
 		damage = 0
@@ -45,7 +44,7 @@ func take_damage(damage: int) -> void:
 
 	if health == 0:
 		# Ded
-		queue_free()
+		EventManager.entity_died.emit(self)
 	
 func is_alive() -> bool:
 	return health > 0

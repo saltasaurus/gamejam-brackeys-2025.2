@@ -22,9 +22,15 @@ func _ready() -> void:
 	gui_disable_input = false
 	player.health_updated.connect(_on_player_health_updated)
 
+	EventManager.entity_died.connect(_on_entity_died)
+
 func _on_player_health_updated(health: int):
 	print("health updated")
 	EventManager.player_health_updated.emit(health)
+
+func _on_entity_died(e: Entity):
+	map.vacate(e.position)
+	e.queue_free()
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -81,7 +87,10 @@ func move_entity(entity: Node2D, dir: Vector2) -> bool:
 	var next_position = entity.position + movement
 	
 	if map.is_walkable(map.local_to_map(next_position)):
+		map.occupy(next_position, entity)
+		map.vacate(entity.position)
 		entity.position = next_position
+
 		return true
 
 	return false
@@ -92,6 +101,9 @@ func on_stairs(e: Node2D) -> bool:
 func update_world():
 	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
 	for e in enemies:
+		if not is_instance_valid(e):
+			continue
+
 		var enemy = e as Enemy
 		if not enemy.is_alive():
 			continue
