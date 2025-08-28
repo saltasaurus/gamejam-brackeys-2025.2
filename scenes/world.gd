@@ -49,7 +49,7 @@ func _unhandled_input(event):
 		move_player(Vector2.DOWN)
 
 func move_player(dir):
-	var enemy = get_adjacent_enemy(player, dir)
+	var enemy = get_adjacent_enemy(player.position, dir)
 	var _update_world = false
 	if enemy != null:
 		await attack_melee(player, enemy, dir)
@@ -71,16 +71,23 @@ func pathfind(start_world_pos: Vector2, goal_world_pos: Vector2) -> PackedVector
 	var goal_id = map.pathfinding.get_closest_point(map.local_to_map(goal_world_pos))
 	return map.pathfinding.get_point_path(start_id, goal_id)
 
-func get_adjacent_enemy(entity: Node2D, dir: Vector2) -> Enemy:
+func get_adjacent_entity(pos: Vector2, dir: Vector2) -> Enemy:
 	var movement: Vector2 = dir * tile_size
-	var next_position = entity.position + movement
-	var loc2map_pos = map.local_to_map(next_position)
-	
-	for enemy in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
-		var enemy_pos: Vector2i = enemy.position.floor()
-		if map.local_to_map(enemy_pos) == loc2map_pos:
-			return enemy
+	var next_position = pos + movement
+	return map.get_entity(next_position)
+
+func get_adjacent_enemy(pos: Vector2, dir: Vector2) -> Enemy:
+	var e = get_adjacent_entity(pos, dir)
+	if e is Enemy:
+		return e as Enemy
 	return null
+
+func get_adjacent_player_dir(pos: Vector2) -> Vector2:
+	for dir in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+		var e = get_adjacent_entity(pos, dir)
+		if e is Player:
+			return dir
+	return Vector2.ZERO
 
 func move_entity(entity: Node2D, dir: Vector2) -> bool:
 	var movement: Vector2 = dir * tile_size
@@ -108,7 +115,7 @@ func update_world():
 		if not enemy.is_alive():
 			continue
 
-		var action = enemy.take_action(self)
+		var action := enemy.take_action(self)
 		if action == null:
 			continue
 
@@ -116,18 +123,20 @@ func update_world():
 			EntityAction.Type.MOVE:
 				move_entity(enemy, action.move_dir)
 			EntityAction.Type.ATTACK_MELEE:
-				await get_tree().create_timer(0.1).timeout
-				# TODO - Technically this should get the entity in direction `action.attack_dir`
-				await attack_melee(enemy, player, action.attack_dir)
+				var target_entity = map.get_entity(enemy.position + (action.attack_dir * tile_size))
+				if target_entity != null:
+					await get_tree().create_timer(0.1).timeout
+					await attack_melee(enemy, target_entity, action.attack_dir)
 
 func setup_world():
 	map.generate()
-	player.position = map.start_point * tile_size
+	# player.position = map.start_point * tile_size
 	_snap_entity_pos(player)
 	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
 		_snap_entity_pos(e)
+		map.occupy(e.position, e)
 	camera.position = player.position
-		
+	map.occupy(player.position, player)
 
 func load_next_level():
 	paused = true

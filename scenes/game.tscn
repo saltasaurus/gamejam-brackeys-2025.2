@@ -72,14 +72,14 @@ size = Vector2i(240, 180)
 script = ExtResource("2_u5sy4")
 
 [node name="Player" parent="World" instance=ExtResource("2_p57ef")]
-position = Vector2(10, 10)
+position = Vector2(10, 20)
 stats = SubResource("Resource_ca42v")
 
 [node name="BasicEnemy" parent="World" instance=ExtResource("3_u5sy4")]
-position = Vector2(10, 50)
+position = Vector2(10, 10)
 
 [node name="BasicEnemy2" parent="World" instance=ExtResource("3_u5sy4")]
-position = Vector2(50, 40)
+position = Vector2(20, 10)
 
 [node name="ProcMap" type="TileMapLayer" parent="World"]
 z_index = -1
