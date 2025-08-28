@@ -222,7 +222,6 @@ func wait_for_transition(transition: ColorRect, final_val: Variant, duration: fl
 func attack_melee(source: Entity, target: Entity, dir: Vector2) -> void:
 	await source.play_melee_attack_anim(dir)
 	var damage = source.stats.strength.adjustedValue - target.stats.defense.adjustedValue
-	print(source, " attack_melee ", target, ": Resolved damage to ", damage)
 	target.take_damage(damage)
 	spawn_damage_indicator(damage, target.position + Vector2(4, -5))
 
