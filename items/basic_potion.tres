@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="HealthItem" load_steps=3 format=3 uid="uid://1mxmgi5b47nt"]
+
+[ext_resource type="Script" uid="uid://cf4n0rsas64lj" path="res://items/health_item.gd" id="1_qwpoc"]
+[ext_resource type="Texture2D" uid="uid://bdfc5n7ynus71" path="res://assets/health_potion.png" id="2_gb4u0"]
+
+[resource]
+script = ExtResource("1_qwpoc")
+heal_amount = 3
+texture = ExtResource("2_gb4u0")

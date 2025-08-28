@@ -12,7 +12,6 @@ var game_scale = 1
 func _ready() -> void:
 	_update_scale()
 	get_viewport().connect("size_changed", _update_scale)
-	#ui.world = world
 
 	frame_buffer.gui_input.connect(_on_frame_buffer_gui_input)
 

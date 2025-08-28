@@ -11,3 +11,6 @@ chest_open = ExtResource("2_vtdm8")
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_5lva3")
 centered = false
+
+[node name="ItemSprite" type="Sprite2D" parent="."]
+centered = false

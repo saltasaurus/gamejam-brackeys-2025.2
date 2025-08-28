@@ -48,5 +48,12 @@ func take_damage(damage: int) -> void:
 		# Ded
 		EventManager.entity_died.emit(self)
 	
+func heal(amount: int) -> void:
+	health += amount
+	if health >= stats.health.baseValue:
+		health = stats.health.baseValue
+
+	health_updated.emit(health)
+
 func is_alive() -> bool:
 	return health > 0

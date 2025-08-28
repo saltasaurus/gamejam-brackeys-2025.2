@@ -5,6 +5,7 @@ const ENEMY_GROUP = "enemy"
 const ENTITY_GROUP = "entity"
 
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
+static var chest_scene = preload("res://entities/chest/Chest.tscn")
 
 @onready var player = $Player
 @onready var map: Map = $ProcMap
@@ -26,7 +27,6 @@ func _ready() -> void:
 	EventManager.entity_died.connect(_on_entity_died)
 
 func _on_player_health_updated(health: int):
-	print("health updated")
 	EventManager.player_health_updated.emit(health)
 
 func _on_entity_died(e: Entity):
@@ -48,6 +48,10 @@ func _unhandled_input(event):
 		move_player(Vector2.UP)
 	elif event.is_action_pressed("move_down"):
 		move_player(Vector2.DOWN)
+
+func on_chest_opened(item: Item):
+	if item is HealthItem:
+		player.heal(item.heal_amount)
 
 func move_player(dir):
 	var entity = get_adjacent_entity(player.position, dir)
@@ -134,13 +138,29 @@ func update_world():
 					await attack_melee(enemy, target_entity, action.attack_dir)
 
 func setup_world():
-	map.generate()
+	# Hacky way to clear world between levels
+	for e in get_children():
+		if e is Chest:
+			e.queue_free()
+
+	map.generate(1)
+
+	for chest_pos in map.chests:
+		var c = chest_scene.instantiate() as Chest
+		# TODO: Random item
+		c.item = load("res://items/basic_potion.tres")
+		c.position = chest_pos * tile_size
+		add_child(c)
+		c.opened.connect(on_chest_opened)
+		map.occupy(c.position, c)
+
 	player.position = map.start_point * tile_size
 	camera.position = player.position
 
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
-		map.occupy(e.position, e)
-		_snap_entity_pos(e)
+		if is_instance_valid(e):
+			map.occupy(e.position, e)
+			_snap_entity_pos(e)
 
 func load_next_level():
 	paused = true

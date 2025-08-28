@@ -22,17 +22,26 @@ var start_point: Vector2i
 var end_point: Vector2i
 
 var pathfinding: AStar2D
+
 var occupied: Dictionary[Vector2i, Node] = {}
 
-func generate():
-	start_point = Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
-	end_point = Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
+var chests: Array[Vector2i] = []
+
+func rand_pos() -> Vector2i:
+	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
+
+func generate(num_chests: int):
+	start_point = rand_pos()
+	end_point = rand_pos()
 
 	var valid := false
 
 	while not valid:
 		clear()
 		_map.clear()
+		chests.clear()
+		occupied.clear()
+
 		# seed(seed_value)
 
 		_init_map()
@@ -45,6 +54,8 @@ func generate():
 		_force_walls()
 
 		_place_stairs()
+		_place_chests(num_chests)
+
 		_apply_to_tilemap()
 		_build_pathfinding()
 
@@ -119,7 +130,6 @@ func _get_tilemap_pos(tile) -> Vector2i:
 			return STAIRS_TILESET_POS
 	return FLOOR_TILESET_POS
 		
-
 func _apply_to_tilemap() -> void:
 	for x in range(map_width):
 		for y in range(map_height):
@@ -157,6 +167,13 @@ func _build_pathfinding() -> void:
 			if i == j: continue
 			if pathfinding.get_point_position(i).distance_to(pathfinding.get_point_position(j)) == 1:
 				pathfinding.connect_points(i, j)
+
+func _place_chests(num: int):
+	for i in range(num):
+		var pos = rand_pos()
+		while not _map.has(pos) or _map[pos] != FLOOR_TILE:
+			pos = rand_pos()
+		chests.push_back(pos)
 
 func occupy(pos: Vector2, entity: Node) -> void:
 	occupied[local_to_map(pos)] = entity
