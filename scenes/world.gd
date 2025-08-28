@@ -7,6 +7,7 @@ const ENEMY_GROUP = "enemy"
 @onready var map: Map = $ProcMap
 @onready var cards = $CardsCanvas/Cards
 @onready var cards_canvas = $CardsCanvas
+@onready var camera = $Camera
 
 var tile_size = 10
 var paused: bool = false
@@ -17,6 +18,11 @@ func _ready() -> void:
 	setup_world()
 	cards_canvas.visible = false
 	gui_disable_input = false
+	player.health_updated.connect(_on_player_health_updated)
+
+func _on_player_health_updated(health: int):
+	print("health updated")
+	EventManager.player_health_updated.emit(health)
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -33,31 +39,40 @@ func _unhandled_input(event):
 		move_player(Vector2.UP)
 	elif event.is_action_pressed("move_down"):
 		move_player(Vector2.DOWN)
-	
+
 func move_player(dir):
-	if can_attack_enemy(player, dir):
-		print("CAN ATTACK ENEMY")
+	var enemy = get_adjacent_enemy(player, dir)
+	var _update_world = false
+	if enemy != null:
+		await attack_melee(player, enemy, dir)
+		_update_world = true
 	elif move_entity(player, dir):
+		camera.position = player.position
 		if on_stairs(player):
 			load_next_level()
 		else:
-			update_world()
+			_update_world = true
+
+	if _update_world:
+		paused = true
+		await update_world()
+		paused = false
 
 func pathfind(start_world_pos: Vector2, goal_world_pos: Vector2) -> PackedVector2Array:
 	var start_id = map.pathfinding.get_closest_point(map.local_to_map(start_world_pos))
 	var goal_id = map.pathfinding.get_closest_point(map.local_to_map(goal_world_pos))
 	return map.pathfinding.get_point_path(start_id, goal_id)
 
-func can_attack_enemy(entity: Node2D, dir: Vector2) -> bool:
+func get_adjacent_enemy(entity: Node2D, dir: Vector2) -> Enemy:
 	var movement: Vector2 = dir * tile_size
 	var next_position = entity.position + movement
 	var loc2map_pos = map.local_to_map(next_position)
 	
 	for enemy in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
 		var enemy_pos: Vector2i = enemy.position.floor()
-		if enemy_pos == loc2map_pos:
-			return true
-	return false
+		if map.local_to_map(enemy_pos) == loc2map_pos:
+			return enemy
+	return null
 
 func move_entity(entity: Node2D, dir: Vector2) -> bool:
 	var movement: Vector2 = dir * tile_size
@@ -76,11 +91,21 @@ func update_world():
 	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
 	for e in enemies:
 		var enemy = e as Enemy
+		if not enemy.is_alive():
+			continue
+
 		var action = enemy.take_action(self)
-		if action != null:
-			match action.type:
-				EntityAction.Type.MOVE:
-					move_entity(enemy, action.move_dir)
+		if action == null:
+			continue
+
+		match action.type:
+			EntityAction.Type.MOVE:
+				move_entity(enemy, action.move_dir)
+			EntityAction.Type.ATTACK_MELEE:
+				# Add short delay to prevent enemy attacking instantly
+				await get_tree().create_timer(0.5).timeout
+				# TODO - Technically this should get the entity in direction `action.attack_dir`
+				await attack_melee(enemy, player, action.attack_dir)
 
 func setup_world():
 	map.generate()
@@ -88,13 +113,14 @@ func setup_world():
 	_snap_entity_pos(player)
 	for e in (get_tree().get_nodes_in_group(ENEMY_GROUP) as Array[Enemy]):
 		_snap_entity_pos(e)
+	camera.position = player.position
 		
 
 func load_next_level():
 	paused = true
 	var transition: ColorRect = $EffectsCanvas/Transition
 
-	wait_for_transition(transition, 1, 1)
+	await wait_for_transition(transition, 1, 1)
 
 	# TODO: Real card selection logic
 	select_cards = player_floor % 1 == 0
@@ -123,7 +149,7 @@ func load_next_level():
 
 		cards.show_cards(modifiers)
 
-		wait_for_transition(transition, -1, 1)
+		await wait_for_transition(transition, -1, 1)
 
 		var card_modifier: CardModifier = await cards.selected
 		
@@ -131,7 +157,7 @@ func load_next_level():
 		# Player updates stats by connecting to this signal
 		EventManager.emit_signal("card_selected", card_modifier.modifiers)
 
-		wait_for_transition(transition, 1, 1)
+		await wait_for_transition(transition, 1, 1)
 
 	cards_canvas.visible = false
 	setup_world()
@@ -139,10 +165,16 @@ func load_next_level():
 	# Tell UI to update
 	EventManager.emit_signal("level_passed", player_floor)
 
-	wait_for_transition(transition, -1, 1)
+	await wait_for_transition(transition, -1, 1)
 	paused = false
 
 func wait_for_transition(transition: ColorRect, final_val: Variant, duration: float) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(transition, "material:shader_parameter/height", final_val, duration)
 	await tween.finished
+
+func attack_melee(source: Entity, target: Entity, dir: Vector2) -> void:
+	await source.play_melee_attack_anim(dir)
+	var damage = source.stats.strength.adjustedValue - target.stats.defense.adjustedValue
+	print(source, " attack_melee ", target, ": Resolved damage to ", damage)
+	target.take_damage(damage)
