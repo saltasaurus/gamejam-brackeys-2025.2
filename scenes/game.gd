@@ -36,11 +36,12 @@ func _unhandled_input(event):
 
 func _on_frame_buffer_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouse:
+		# Because we are rendering a viewport that is scaled up, we
+		# must transform mouse events from screen pos to viewport pos.
 		var local_pos = event.position / game_scale
 		var ev = event.duplicate()
 		ev.position = local_pos
-		ev.global_position = local_pos  # keeps it consistent
-		print(ev.position)
+		ev.global_position = local_pos
 		world.push_input(ev)
 	else:
 		world.push_input(event)

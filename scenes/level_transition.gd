@@ -1,47 +1,43 @@
 extends Control
+class_name LevelTransition
 
 static var card_scene = preload("res://scenes/Card.tscn")
 static var y_pos = 40
 
-func _ready() -> void:
-	var duration = 3
+var cards: Array[Card] = []
 
-	var s1 = StatModifier.new()
-	s1.type = StatModifier.Type.ADD
-	s1.duration = duration
-	s1.target = CharacterStats.Type.STRENGTH
-	s1.value = 3
-	
-	var m1 = CardModifier.new()
-	m1.duration_floors = duration
-	m1.modifiers.push_back(s1)
-	m1.modifiers.push_back(s1)
+signal selected(modifier: CardModifier)
 
-	show_cards([
-		m1,
-		m1,
-		m1
-	])
-	
-	mouse_entered.connect(func(): print("mouse entered"))
+func _unhandled_input(event: InputEvent) -> void:
+    if event.is_action_pressed("ui_accept"):
+        var focused = get_viewport().gui_get_focus_owner()
+        if focused and focused is Card:
+            selected.emit((focused as Card).modifier)
+
+func clear_cards() -> void:
+    for c in get_children():
+        c.queue_free()
+    cards.clear()
 
 func show_cards(modifiers: Array[CardModifier]) -> void:
-	var spacing = 4
+    clear_cards()
 
-	var total_width = 0.0
-	for m in modifiers:
-		total_width += 54
-	total_width += spacing * (modifiers.size() - 1)
+    var spacing = 4
 
-	var x = (size.x - total_width) / 2
-	for m in modifiers:
-		var card = card_scene.instantiate() as Card
-		card.modifier = m
-		add_child(card)
-		card.position = Vector2(x, y_pos)
-		card.focused_pos = y_pos
-		card.unfocused_pos = y_pos + 6
-		x += 54 + spacing
-		card.grab_focus()
+    var total_width = 0.0
+    for m in modifiers:
+        total_width += 54
+    total_width += spacing * (modifiers.size() - 1)
 
-	
+    var x = (size.x - total_width) / 2
+    for m in modifiers:
+        var card = card_scene.instantiate() as Card
+        card.modifier = m
+        add_child(card)
+        card.position = Vector2(x, y_pos)
+        card.focused_pos = y_pos
+        card.unfocused_pos = y_pos + 6
+        x += 54 + spacing
+        cards.push_back(card)
+
+    cards[0].grab_focus()

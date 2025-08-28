@@ -87,10 +87,17 @@ script = ExtResource("5_0tnpc")
 
 [node name="CardsCanvas" type="CanvasLayer" parent="World"]
 
+[node name="Background" type="ColorRect" parent="World/CardsCanvas"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.133333, 0.137255, 0.137255, 1)
+
 [node name="Cards" parent="World/CardsCanvas" instance=ExtResource("11_kvpfn")]
 offset_right = 0.0
 offset_bottom = 0.0
-focus_mode = 2
 mouse_filter = 2
 
 [node name="EffectsCanvas" type="CanvasLayer" parent="World"]

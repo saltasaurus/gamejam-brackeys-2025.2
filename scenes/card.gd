@@ -19,14 +19,8 @@ func _ready() -> void:
 
 	duration_label.text = str(modifier.duration_floors) + " floors"
 
-	mouse_entered.connect(_on_mouse_entered)
-
 func _process(_delta: float) -> void:
 	if has_focus():
 		position.y = focused_pos
 	else:
 		position.y = unfocused_pos
-
-func _on_mouse_entered() -> void:
-	print("entered")
-	grab_focus()
