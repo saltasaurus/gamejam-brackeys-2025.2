@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dx6bvar0gqus8"]
+
+[ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="1_ltrgt"]
+[ext_resource type="Script" uid="uid://11jynr7hqk5x" path="res://scenes/status_indicator.gd" id="2_pdomm"]
+
+[node name="Label" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("1_ltrgt")
+text = "3"
+script = ExtResource("2_pdomm")

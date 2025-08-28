@@ -3,6 +3,8 @@ extends SubViewport
 
 const ENEMY_GROUP = "enemy"
 
+static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
+
 @onready var player = $Player
 @onready var map: Map = $ProcMap
 @onready var cards = $CardsCanvas/Cards
@@ -178,3 +180,10 @@ func attack_melee(source: Entity, target: Entity, dir: Vector2) -> void:
 	var damage = source.stats.strength.adjustedValue - target.stats.defense.adjustedValue
 	print(source, " attack_melee ", target, ": Resolved damage to ", damage)
 	target.take_damage(damage)
+	spawn_damage_indicator(damage, target.position + Vector2(4, -5))
+
+func spawn_damage_indicator(val: int, pos: Vector2):
+	var s: RogueStatusIndicator = damage_indicator.instantiate() as RogueStatusIndicator
+	s.position = pos
+	s.text = str(val)
+	add_child(s)

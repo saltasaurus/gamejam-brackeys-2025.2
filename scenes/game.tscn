@@ -84,6 +84,7 @@ tile_set = ExtResource("5_p57ef")
 script = ExtResource("5_0tnpc")
 
 [node name="CardsCanvas" type="CanvasLayer" parent="World"]
+visible = false
 
 [node name="Background" type="ColorRect" parent="World/CardsCanvas"]
 anchors_preset = 15
