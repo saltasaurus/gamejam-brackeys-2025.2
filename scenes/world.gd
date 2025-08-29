@@ -22,7 +22,7 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 
 var tile_size = 10
 var paused: bool = false
-var player_floor = 1
+var player_floor: int = 1
 var select_cards: bool = false
 
 #region Difficulty variables
@@ -145,6 +145,25 @@ func get_adjacent_player_dir(pos: Vector2) -> Vector2:
 			return dir
 	return Vector2.ZERO
 
+func move_entity(entity: Entity, dir: Vector2) -> bool:
+	var movement: Vector2 = dir * tile_size
+	var next_position = entity.position + movement
+	
+	if map.is_walkable(map.local_to_map(next_position)):
+		map.vacate(entity.position)
+		map.occupy(next_position, entity)
+
+		if entity.on_screen.is_on_screen():
+			var tween = get_tree().create_tween()
+			tween.tween_property(entity, "position", next_position, 0.05)
+			await tween.finished
+		else:
+			entity.position = next_position
+
+		return true
+
+	return false
+
 func on_stairs(e: Node2D) -> bool:
 	return map.is_stairs(map.local_to_map(e.position))
 #endregion
@@ -185,9 +204,16 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
+	var num_entities = (player_floor / 3) + 1
+	var num_chests = (player_floor / 10)
+	var width = 10 + (player_floor / 3) + randi_range(0, 5)
+	var height = 10 + (player_floor / 3) + randi_range(0, 5)
+
 	map.generate(
-		1, # num chests
-		2, # num entities
+		num_chests,
+		num_entities,
+		width,
+		height,
 	)
 
 	_create_and_place_chests()

@@ -53,3 +53,6 @@ sprite_frames = SubResource("SpriteFrames_m2rku")
 centered = false
 script = ExtResource("2_rwafm")
 stats = SubResource("Resource_m7qsk")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(0, 0, 10, 10)
