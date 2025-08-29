@@ -19,6 +19,8 @@ var paused: bool = false
 var player_floor = 1
 var select_cards: bool = false
 
+var camera_follow_enabled: bool = true
+
 func _ready() -> void:
 	setup_world()
 	cards_canvas.visible = false
@@ -54,18 +56,23 @@ func on_chest_opened(item: Item):
 	if item is HealthItem:
 		player.heal(item.heal_amount)
 
+func _process(_delta: float) -> void:
+	if camera_follow_enabled:
+		camera.position = player.position
+
 func move_player(dir):
 	var entity = get_adjacent_entity(player.position, dir)
 	var _update_world = false
 	if entity != null:
 		if entity is Enemy:
+			camera_follow_enabled = false
 			await attack_melee(player, entity, dir)
+			camera_follow_enabled = true
 			_update_world = true
 		if entity is Interactable:
 			(entity as Interactable).interact(player)
 			_update_world = true
-	elif move_entity(player, dir):
-		camera.position = player.position
+	elif await move_entity(player, dir):
 		if on_stairs(player):
 			load_next_level()
 		else:
@@ -106,7 +113,9 @@ func move_entity(entity: Node2D, dir: Vector2) -> bool:
 	if map.is_walkable(map.local_to_map(next_position)):
 		map.vacate(entity.position)
 		map.occupy(next_position, entity)
-		entity.position = next_position
+		var tween = get_tree().create_tween()
+		tween.tween_property(entity, "position", next_position, 0.05)
+		await tween.finished
 		return true
 
 	return false
@@ -131,7 +140,7 @@ func update_world():
 
 		match action.type:
 			EntityAction.Type.MOVE:
-				move_entity(enemy, action.move_dir)
+				await move_entity(enemy, action.move_dir)
 			EntityAction.Type.ATTACK_MELEE:
 				var target_entity = map.get_entity(enemy.position + (action.attack_dir * tile_size))
 				if target_entity != null:
