@@ -52,11 +52,17 @@ func generate(num_chests: int):
 		_create_room(end_point, room_radius)
 
 		_force_walls()
-
 		_place_stairs()
-		_place_chests(num_chests)
 
 		_apply_to_tilemap()
+
+		var open_cells: Array[Vector2i] = []
+		for cell in get_used_cells():
+			if is_walkable(cell) and cell != start_point and cell != end_point:
+				open_cells.push_back(cell)
+		
+		_place_chests(open_cells, num_chests)
+
 		_build_pathfinding()
 
 		valid = _is_valid_map()
@@ -168,11 +174,15 @@ func _build_pathfinding() -> void:
 			if pathfinding.get_point_position(i).distance_to(pathfinding.get_point_position(j)) == 1:
 				pathfinding.connect_points(i, j)
 
-func _place_chests(num: int):
+func _place_chests(open_cells: Array[Vector2i], num: int):
 	for i in range(num):
-		var pos = rand_pos()
-		while not _map.has(pos) or _map[pos] != FLOOR_TILE:
-			pos = rand_pos()
+		if open_cells.size() == 0:
+			printerr("No open cells left")
+			return
+
+		var idx = randi_range(0, open_cells.size() - 1)
+		var pos = open_cells[idx]
+		open_cells.remove_at(idx)
 		chests.push_back(pos)
 
 func occupy(pos: Vector2, entity: Node) -> void:
