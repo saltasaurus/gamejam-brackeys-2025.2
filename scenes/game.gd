@@ -11,11 +11,12 @@ var game_scale = 1
 
 func _ready() -> void:
 	_update_scale()
-	get_viewport().connect("size_changed", _update_scale)
+	get_viewport().size_changed.connect( _update_scale)
 
 	frame_buffer.gui_input.connect(_on_frame_buffer_gui_input)
 
 func _update_scale():
+	print("UPDATING SCALE")
 	var window_size = get_viewport().size
 	game_scale = min(
 		floor(window_size.x / INTERNAL_RESOLUTION.x),
