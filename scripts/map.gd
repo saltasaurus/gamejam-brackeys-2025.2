@@ -23,14 +23,15 @@ var end_point: Vector2i
 
 var pathfinding: AStar2D
 
-var occupied: Dictionary[Vector2i, Node] = {}
+var occupied: Dictionary[Vector2i, Node2D] = {}
 
 var chests: Array[Vector2i] = []
+var enemies: Array[Vector2i] = []
 
 func rand_pos() -> Vector2i:
 	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
 
-func generate(num_chests: int):
+func generate(num_chests: int, num_enemies: int):
 	start_point = rand_pos()
 	end_point = rand_pos()
 
@@ -41,6 +42,7 @@ func generate(num_chests: int):
 		_map.clear()
 		chests.clear()
 		occupied.clear()
+		enemies.clear()
 
 		# seed(seed_value)
 
@@ -61,7 +63,8 @@ func generate(num_chests: int):
 			if is_walkable(cell) and cell != start_point and cell != end_point:
 				open_cells.push_back(cell)
 		
-		_place_chests(open_cells, num_chests)
+		chests = _place_random(open_cells, num_chests)
+		enemies = _place_random(open_cells, num_enemies)
 
 		_build_pathfinding()
 
@@ -165,6 +168,8 @@ func _build_pathfinding() -> void:
 	for cell in get_used_cells():
 		if not is_walkable(cell):
 			continue
+		if cell in chests:
+			continue
 		pathfinding.add_point(id, cell)
 		id += 1
 	
@@ -174,18 +179,21 @@ func _build_pathfinding() -> void:
 			if pathfinding.get_point_position(i).distance_to(pathfinding.get_point_position(j)) == 1:
 				pathfinding.connect_points(i, j)
 
-func _place_chests(open_cells: Array[Vector2i], num: int):
+func _place_random(open_cells: Array[Vector2i], num: int) -> Array[Vector2i]:
+	var res: Array[Vector2i] = []
 	for i in range(num):
 		if open_cells.size() == 0:
 			printerr("No open cells left")
-			return
+			break 
 
 		var idx = randi_range(0, open_cells.size() - 1)
 		var pos = open_cells[idx]
 		open_cells.remove_at(idx)
-		chests.push_back(pos)
+		res.push_back(pos)
 
-func occupy(pos: Vector2, entity: Node) -> void:
+	return res
+
+func occupy(pos: Vector2, entity: Node2D) -> void:
 	occupied[local_to_map(pos)] = entity
 
 func vacate(pos: Vector2) -> void:

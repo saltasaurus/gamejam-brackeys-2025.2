@@ -1,10 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=21 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://iu2i20icpjiu" path="res://entities/player/player.tscn" id="2_p57ef"]
 [ext_resource type="Script" uid="uid://bnhiujpo84owt" path="res://scenes/world.gd" id="2_u5sy4"]
-[ext_resource type="PackedScene" uid="uid://dpfmb1jollxg1" path="res://entities/basic_enemy/basic_enemy.tscn" id="3_u5sy4"]
 [ext_resource type="Script" uid="uid://ddsmk3umtytif" path="res://scripts/map.gd" id="5_0tnpc"]
 [ext_resource type="TileSet" uid="uid://hennwlx7g0g4" path="res://assets/biscuit_tiles.tres" id="5_p57ef"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="5_vtaks"]
@@ -74,12 +73,6 @@ script = ExtResource("2_u5sy4")
 [node name="Player" parent="World" instance=ExtResource("2_p57ef")]
 position = Vector2(10, 20)
 stats = SubResource("Resource_ca42v")
-
-[node name="BasicEnemy" parent="World" instance=ExtResource("3_u5sy4")]
-position = Vector2(10, 10)
-
-[node name="BasicEnemy2" parent="World" instance=ExtResource("3_u5sy4")]
-position = Vector2(20, 10)
 
 [node name="ProcMap" type="TileMapLayer" parent="World"]
 z_index = -1

@@ -6,6 +6,7 @@ const ENTITY_GROUP = "entity"
 
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
 static var chest_scene = preload("res://entities/chest/Chest.tscn")
+static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.tscn")
 
 @onready var player = $Player
 @onready var map: Map = $ProcMap
@@ -103,8 +104,8 @@ func move_entity(entity: Node2D, dir: Vector2) -> bool:
 	var next_position = entity.position + movement
 	
 	if map.is_walkable(map.local_to_map(next_position)):
-		map.occupy(next_position, entity)
 		map.vacate(entity.position)
+		map.occupy(next_position, entity)
 		entity.position = next_position
 		return true
 
@@ -142,17 +143,28 @@ func setup_world():
 	for e in get_children():
 		if e is Chest:
 			e.free()
+		elif e is Enemy:
+			e.free()
 
-	map.generate(1)
+	map.generate(
+		1, # num chests
+		2, # num entities
+	)
 
-	for chest_pos in map.chests:
+	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
 		# TODO: Random item
 		c.item = load("res://items/basic_potion.tres")
-		c.position = chest_pos * tile_size
+		c.position = cell * tile_size
 		add_child(c)
 		c.opened.connect(on_chest_opened)
 		map.occupy(c.position, c)
+
+	for cell in map.enemies:
+		var e = basic_enemy_scene.instantiate() as Enemy
+		e.position = cell * tile_size
+		add_child(e)
+		map.occupy(e.position, e)
 
 	player.position = map.start_point * tile_size
 	camera.position = player.position
@@ -160,7 +172,6 @@ func setup_world():
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
 		map.occupy(e.position, e)
 		_snap_entity_pos(e)
-
 
 func load_next_level():
 	paused = true
