@@ -170,6 +170,8 @@ func _build_pathfinding() -> void:
 			continue
 		if cell in chests:
 			continue
+		if cell == end_point:
+			continue
 		pathfinding.add_point(id, cell)
 		id += 1
 	

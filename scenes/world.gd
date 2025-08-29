@@ -43,14 +43,16 @@ func _unhandled_input(event):
 	if paused:
 		return
 
+	paused = true
 	if event.is_action_pressed("move_left"):
-		move_player(Vector2.LEFT)
+		await move_player(Vector2.LEFT)
 	elif event.is_action_pressed("move_right"):
-		move_player(Vector2.RIGHT)
+		await move_player(Vector2.RIGHT)
 	elif event.is_action_pressed("move_up"):
-		move_player(Vector2.UP)
+		await move_player(Vector2.UP)
 	elif event.is_action_pressed("move_down"):
-		move_player(Vector2.DOWN)
+		await move_player(Vector2.DOWN)
+	paused = false
 
 func on_chest_opened(item: Item):
 	if item is HealthItem:
