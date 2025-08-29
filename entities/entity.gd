@@ -12,10 +12,13 @@ var health: int
 func _ready() -> void:
 	stats._init()
 	# Uses an implicit, duck-typed interface for any compatible resources
+	print("ENEMY STATS")
+	print("===========")
 	print("Health: ", stats.health.adjustedValue) 
 	print("Strength: ", stats.strength.adjustedValue)
 	print("Speed: ", stats.speed.adjustedValue)
 	print("Defense: ", stats.defense.adjustedValue)
+	print()
 
 	health = stats.health.baseValue
 

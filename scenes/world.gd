@@ -1,9 +1,10 @@
 class_name World
 extends SubViewport
 
+#region Variables
+
 const ENEMY_GROUP = "enemy"
 const ENTITY_GROUP = "entity"
-
 
 @export var chest_items: Array[Item]
 @export var modifiers: Array[StatModifier]
@@ -25,6 +26,7 @@ var player_floor = 1
 var select_cards: bool = false
 
 var camera_follow_enabled: bool = true
+#endregion
 
 func _ready() -> void:
 	setup_world()
@@ -33,13 +35,6 @@ func _ready() -> void:
 	player.health_updated.connect(_on_player_health_updated)
 
 	EventManager.entity_died.connect(_on_entity_died)
-
-func _on_player_health_updated(health: int):
-	EventManager.player_health_updated.emit(health)
-
-func _on_entity_died(e: Entity):
-	map.vacate(e.position)
-	e.queue_free()
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -59,20 +54,28 @@ func _unhandled_input(event):
 		await move_player(Vector2.DOWN)
 	paused = false
 
-func on_chest_opened(item: Item):
-	if item is HealthItem:
-		player.heal(item.heal_amount)
-	if item is WeaponItem:
-		var statmod = StatModifier.new()
-		statmod.initialize(item.strength_amount, StatModifier.Type.ADD, CharacterStats.Type.STRENGTH)
 
-		EventManager.emit_signal("player_stat_modified", statmod)
-		print("SENT WEAPON DATA")
 
 func _process(_delta: float) -> void:
 	if camera_follow_enabled:
 		camera.position = player.position
+		
+#region Signals
+func _on_player_health_updated(health: int):
+	EventManager.player_health_updated.emit(health)
 
+func _on_entity_died(e: Entity):
+	map.vacate(e.position)
+	e.queue_free()
+	
+func on_chest_opened(item: Item):
+	if item is HealthItem:
+		player.heal(item.heal_amount)
+	EventManager.emit_signal("player_stat_modified", item)
+	print("SENT ITEM DATA")
+#endregion
+
+#region Entity movement
 func move_player(dir):
 	var entity = get_adjacent_entity(player.position, dir)
 	var _update_world = false
@@ -96,6 +99,22 @@ func move_player(dir):
 		await update_world()
 		paused = false
 
+func move_entity(entity: Node2D, dir: Vector2) -> bool:
+	var movement: Vector2 = dir * tile_size
+	var next_position = entity.position + movement
+	
+	if map.is_walkable(map.local_to_map(next_position)):
+		map.vacate(entity.position)
+		map.occupy(next_position, entity)
+		var tween = get_tree().create_tween()
+		tween.tween_property(entity, "position", next_position, 0.05)
+		await tween.finished
+		return true
+
+	return false
+#endregion
+
+#region Map queries
 func pathfind(start_world_pos: Vector2, goal_world_pos: Vector2) -> PackedVector2Array:
 	var start_id = map.pathfinding.get_closest_point(map.local_to_map(start_world_pos))
 	var goal_id = map.pathfinding.get_closest_point(map.local_to_map(goal_world_pos))
@@ -119,22 +138,13 @@ func get_adjacent_player_dir(pos: Vector2) -> Vector2:
 			return dir
 	return Vector2.ZERO
 
-func move_entity(entity: Node2D, dir: Vector2) -> bool:
-	var movement: Vector2 = dir * tile_size
-	var next_position = entity.position + movement
-	
-	if map.is_walkable(map.local_to_map(next_position)):
-		map.vacate(entity.position)
-		map.occupy(next_position, entity)
-		var tween = get_tree().create_tween()
-		tween.tween_property(entity, "position", next_position, 0.05)
-		await tween.finished
-		return true
-
-	return false
-
 func on_stairs(e: Node2D) -> bool:
 	return map.is_stairs(map.local_to_map(e.position))
+#endregion
+
+
+
+
 
 func update_world():
 	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
@@ -173,6 +183,16 @@ func setup_world():
 		2, # num entities
 	)
 
+	_place_chests()
+	_place_enemies()
+	_place_entities()
+
+	player.position = map.start_point * tile_size
+	camera.position = player.position
+
+	
+
+func _place_chests() -> void:
 	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
 		# TODO: Random item
@@ -186,18 +206,33 @@ func setup_world():
 		c.opened.connect(on_chest_opened)
 		map.occupy(c.position, c)
 
+func _place_enemies() -> void:
 	for cell in map.enemies:
 		var e = basic_enemy_scene.instantiate() as Enemy
 		e.position = cell * tile_size
 		add_child(e)
 		map.occupy(e.position, e)
 
-	player.position = map.start_point * tile_size
-	camera.position = player.position
-
+func _place_entities() -> void:
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
 		map.occupy(e.position, e)
 		_snap_entity_pos(e)
+
+func create_card_stats(duration: int) -> StatModifier:
+	var s1 = StatModifier.new()
+	s1.initialize(randi_range(1, 5), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH, duration)
+	return s1
+
+func create_card() -> CardModifier:
+	var duration = randi_range(1, 3)
+	var card = CardModifier.new()
+	card.duration_floors = duration
+	
+	for i in range(1):
+		var card_stats = create_card_stats(duration)
+		card.modifiers.push_back(card_stats)
+	
+	return card
 
 func load_next_level():
 	paused = true
@@ -210,23 +245,12 @@ func load_next_level():
 
 	if select_cards:
 		cards_canvas.visible = true
-
-		# TODO: Generate real cards
-		var duration = randi_range(1, 3)
-
-		var s1 = StatModifier.new()
-		s1.initialize(randi_range(1, 5), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH, duration)
-
-		var m1 = CardModifier.new()
-		m1.duration_floors = duration
-		m1.modifiers.push_back(s1)
-		#m1.modifiers.push_back(s1)
-
+	
 		var modifiers: Array[CardModifier] = []
-		modifiers.push_back(m1)
-		modifiers.push_back(m1)
-		modifiers.push_back(m1)
-
+		for i in range(3):
+			var cardmod = create_card()
+			modifiers.push_back(cardmod)
+			
 		cards.show_cards(modifiers)
 
 		await wait_for_transition(transition, -1, 1)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b6pajlkpkp4nu"]
 
 [ext_resource type="Texture2D" uid="uid://w7v1c7al341p" path="res://assets/ui/card.png" id="1_tgmmg"]
-[ext_resource type="Script" uid="uid://b03nughnjoxe6" path="res://scenes/card.gd" id="1_yiag5"]
+[ext_resource type="Script" path="res://scenes/card.gd" id="1_yiag5"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="3_4dx8l"]
 
 [node name="Card" type="NinePatchRect"]

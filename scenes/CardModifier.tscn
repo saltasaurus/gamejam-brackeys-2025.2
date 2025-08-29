@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://uho43sgh7ws"]
 
 [ext_resource type="Texture2D" uid="uid://p8so4riqyj0p" path="res://assets/ui/damage.png" id="1_1fg83"]
-[ext_resource type="Script" uid="uid://dla16n7t787r8" path="res://scenes/card_modifier_ui.gd" id="1_y1p64"]
+[ext_resource type="Script" path="res://scenes/card_modifier_ui.gd" id="1_y1p64"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="2_y1p64"]
 
 [node name="Modifier" type="Control"]
