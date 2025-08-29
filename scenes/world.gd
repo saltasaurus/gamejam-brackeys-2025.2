@@ -25,6 +25,12 @@ var paused: bool = false
 var player_floor = 1
 var select_cards: bool = false
 
+#region Difficulty variables
+var num_chests = 1
+var num_enemies = 2
+var enemy_bonus_stats_count = 5
+#endregion
+
 var camera_follow_enabled: bool = true
 #endregion
 
@@ -62,6 +68,7 @@ func _process(_delta: float) -> void:
 		
 #region Signals
 func _on_player_health_updated(health: int):
+	# Is this circular?
 	EventManager.player_health_updated.emit(health)
 
 func _on_entity_died(e: Entity):
@@ -183,16 +190,16 @@ func setup_world():
 		2, # num entities
 	)
 
-	_place_chests()
-	_place_enemies()
-	_place_entities()
+	_create_and_place_chests()
+	_create_and_place_enemies()
+	_create_and_place_entities()
 
 	player.position = map.start_point * tile_size
 	camera.position = player.position
 
 	
 
-func _place_chests() -> void:
+func _create_and_place_chests() -> void:
 	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
 		# TODO: Random item
@@ -200,20 +207,29 @@ func _place_chests() -> void:
 		if item == null:
 			item = DEFAULT_ITEM
 		c.item = item
-		print(item, " ", c.item)
 		c.position = cell * tile_size
 		add_child(c)
 		c.opened.connect(on_chest_opened)
 		map.occupy(c.position, c)
 
-func _place_enemies() -> void:
+func _create_and_place_enemies() -> void:
 	for cell in map.enemies:
 		var e = basic_enemy_scene.instantiate() as Enemy
+		e.stats = _get_enemy_stats(e.stats)
 		e.position = cell * tile_size
 		add_child(e)
 		map.occupy(e.position, e)
+		
+func _get_enemy_stats(current_stats: CharacterStats) -> CharacterStats:
+	# For each bonus stat count, create a random stat modification
+	for i in range(enemy_bonus_stats_count):
+		var stat_mod = StatModifier.new() 
+		var random_char_stat = randi_range(0, len(CharacterStats.Type) - 1)
+		stat_mod.initialize(1, StatModifier.Type.ADD, random_char_stat)
 
-func _place_entities() -> void:
+	return current_stats
+
+func _create_and_place_entities() -> void:
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
 		map.occupy(e.position, e)
 		_snap_entity_pos(e)

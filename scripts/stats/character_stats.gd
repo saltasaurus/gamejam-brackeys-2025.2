@@ -28,6 +28,7 @@ func _init() -> void:
 	if speed != null:
 		speed._init()
 
+## Deprecated. Use update_stat
 func add_temp_stat(stats_mod: StatModifier, player_state_manager: TempStatManager) -> void:
 	match stats_mod.target:
 		Type.HEALTH:
