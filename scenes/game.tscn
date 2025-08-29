@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=25 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" path="res://scenes/ui.tscn" id="2_0tnpc"]
@@ -8,33 +8,13 @@
 [ext_resource type="Script" uid="uid://ddsmk3umtytif" path="res://scripts/map.gd" id="5_0tnpc"]
 [ext_resource type="Resource" uid="uid://1mxmgi5b47nt" path="res://items/basic_potion.tres" id="5_kvuet"]
 [ext_resource type="TileSet" uid="uid://hennwlx7g0g4" path="res://assets/biscuit_tiles.tres" id="5_p57ef"]
-[ext_resource type="Script" uid="uid://cf4n0rsas64lj" path="res://items/health_item.gd" id="5_ssvqc"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="5_vtaks"]
-[ext_resource type="Texture2D" uid="uid://bdfc5n7ynus71" path="res://assets/health_potion.png" id="6_264po"]
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="6_kvpfn"]
-[ext_resource type="Script" uid="uid://cw0vu353hkrdw" path="res://items/weapon_item.gd" id="7_1kice"]
-[ext_resource type="Texture2D" uid="uid://p8so4riqyj0p" path="res://assets/ui/damage.png" id="8_5newe"]
+[ext_resource type="Resource" uid="uid://crdwgyenf6lfd" path="res://items/weak_weapon.tres" id="6_trtic"]
+[ext_resource type="Resource" uid="uid://bble1xk1pva0a" path="res://items/shield_item_1.tres" id="7_ir15t"]
 [ext_resource type="Shader" uid="uid://cjygb6yl3te0b" path="res://shader/transition.gdshader" id="9_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://bhn6k1e3wei8k" path="res://scenes/level_transition.tscn" id="11_kvpfn"]
 [ext_resource type="Script" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
-
-[sub_resource type="Resource" id="Resource_bt5mj"]
-script = ExtResource("5_ssvqc")
-heal_amount = 3
-texture = ExtResource("6_264po")
-metadata/_custom_type_script = "uid://cf4n0rsas64lj"
-
-[sub_resource type="Resource" id="Resource_e1j6l"]
-script = ExtResource("7_1kice")
-strength_amount = 8
-texture = ExtResource("8_5newe")
-metadata/_custom_type_script = "uid://cw0vu353hkrdw"
-
-[sub_resource type="Resource" id="Resource_rysoc"]
-script = ExtResource("7_1kice")
-strength_amount = 8
-texture = ExtResource("8_5newe")
-metadata/_custom_type_script = "uid://cw0vu353hkrdw"
 
 [sub_resource type="Resource" id="Resource_dinhu"]
 script = ExtResource("5_vtaks")
@@ -93,8 +73,7 @@ size = Vector2i(80, 180)
 [node name="World" type="SubViewport" parent="."]
 size = Vector2i(240, 180)
 script = ExtResource("2_u5sy4")
-chest_items = Array[ExtResource("4_rysoc")]([SubResource("Resource_bt5mj"), SubResource("Resource_e1j6l"), SubResource("Resource_rysoc")])
-modifiers = null
+chest_items = Array[ExtResource("4_rysoc")]([ExtResource("5_kvuet"), ExtResource("6_trtic"), ExtResource("7_ir15t")])
 
 [node name="BackgroundCanvas" type="CanvasLayer" parent="World"]
 layer = -1
