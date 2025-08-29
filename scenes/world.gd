@@ -4,6 +4,11 @@ extends SubViewport
 const ENEMY_GROUP = "enemy"
 const ENTITY_GROUP = "entity"
 
+
+@export var chest_items: Array[Item]
+@export var modifiers: Array[StatModifier]
+
+static var DEFAULT_ITEM = load("res://items/basic_potion.tres")
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
 static var chest_scene = preload("res://entities/chest/Chest.tscn")
 static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.tscn")
@@ -57,6 +62,12 @@ func _unhandled_input(event):
 func on_chest_opened(item: Item):
 	if item is HealthItem:
 		player.heal(item.heal_amount)
+	if item is WeaponItem:
+		var statmod = StatModifier.new()
+		statmod.initialize(item.strength_amount, StatModifier.Type.ADD, CharacterStats.Type.STRENGTH)
+
+		EventManager.emit_signal("player_stat_modified", statmod)
+		print("SENT WEAPON DATA")
 
 func _process(_delta: float) -> void:
 	if camera_follow_enabled:
@@ -165,7 +176,11 @@ func setup_world():
 	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
 		# TODO: Random item
-		c.item = load("res://items/basic_potion.tres")
+		var item: Item = chest_items.pick_random()
+		if item == null:
+			item = DEFAULT_ITEM
+		c.item = item
+		print(item, " ", c.item)
 		c.position = cell * tile_size
 		add_child(c)
 		c.opened.connect(on_chest_opened)
@@ -200,11 +215,8 @@ func load_next_level():
 		var duration = randi_range(1, 3)
 
 		var s1 = StatModifier.new()
-		s1.type = StatModifier.Type.ADD
-		s1.duration = duration
-		s1.target = CharacterStats.Type.STRENGTH
-		s1.value = randi_range(1, 5)
-		
+		s1.initialize(randi_range(1, 5), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH, duration)
+
 		var m1 = CardModifier.new()
 		m1.duration_floors = duration
 		m1.modifiers.push_back(s1)

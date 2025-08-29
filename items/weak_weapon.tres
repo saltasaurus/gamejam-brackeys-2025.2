@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WeaponItem" load_steps=3 format=3 uid="uid://crdwgyenf6lfd"]
+
+[ext_resource type="Script" uid="uid://cw0vu353hkrdw" path="res://items/weapon_item.gd" id="1_xwlke"]
+[ext_resource type="Texture2D" uid="uid://p8so4riqyj0p" path="res://assets/ui/damage.png" id="2_opapl"]
+
+[resource]
+script = ExtResource("1_xwlke")
+strength_amount = 1
+texture = ExtResource("2_opapl")
+metadata/_custom_type_script = "uid://cw0vu353hkrdw"

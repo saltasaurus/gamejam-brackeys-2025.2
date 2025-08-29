@@ -1,4 +1,5 @@
 class_name StatModifier
+extends Resource
 
 #region Variables
 enum Type {
@@ -31,7 +32,8 @@ func set_duration(_newDuration : float) -> void:
 		duration = _newDuration
 #endregion
 
-func initialize(_value : int, _modifierType : Type, _duration : float = 0) -> void:
+func initialize(_value : int, _modifierType : Type, _target: CharacterStats.Type, _duration : float = 0) -> void:
 	value = _value
 	type = _modifierType
+	target = _target
 	duration = _duration

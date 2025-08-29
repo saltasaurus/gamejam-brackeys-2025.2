@@ -31,6 +31,7 @@ var enemies: Array[Vector2i] = []
 func rand_pos() -> Vector2i:
 	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
 
+
 func generate(num_chests: int, num_enemies: int):
 	start_point = rand_pos()
 	end_point = rand_pos()
