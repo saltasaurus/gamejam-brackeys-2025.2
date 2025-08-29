@@ -3,6 +3,8 @@ extends Node2D
 
 @export var stats: CharacterStats
 
+@onready var on_screen: VisibleOnScreenNotifier2D
+
 signal health_updated(health: int)
 
 # This is the current entity health.
@@ -20,6 +22,10 @@ func _ready() -> void:
 	health = stats.health.baseValue
 
 	health_updated.emit.call_deferred(health)
+
+	on_screen = VisibleOnScreenNotifier2D.new()
+	on_screen.rect = Rect2(0, 0, 10, 10)
+	add_child(on_screen)
 	
 	add_to_group("entity")
 

@@ -6,8 +6,8 @@ extends TileMapLayer
 @export var min_cave_size := 50
 @export var room_radius := 4
 
-@export var map_width := 10
-@export var map_height := 10
+var map_width := 10
+var map_height := 10
 
 const WALL_TILE := 0
 const FLOOR_TILE := 1
@@ -29,9 +29,11 @@ var chests: Array[Vector2i] = []
 var enemies: Array[Vector2i] = []
 
 func rand_pos() -> Vector2i:
-	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_width - 2))
+	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_height - 2))
 
-func generate(num_chests: int, num_enemies: int):
+func generate(num_chests: int, num_enemies: int, width: int, height: int):
+	map_width = width
+	map_height = height
 	start_point = rand_pos()
 	end_point = rand_pos()
 
