@@ -60,7 +60,15 @@ func _unhandled_input(event):
 		await move_player(Vector2.DOWN)
 	paused = false
 
+func on_chest_opened(item: Item):
+	if item is HealthItem:
+		player.heal(item.heal_amount)
+	if item is WeaponItem:
+		var statmod = StatModifier.new()
+		statmod.initialize(item.strength_amount, StatModifier.Type.ADD, CharacterStats.Type.STRENGTH)
 
+		EventManager.emit_signal("player_stat_modified", statmod)
+		print("SENT WEAPON DATA")
 
 func _process(_delta: float) -> void:
 	if camera_follow_enabled:
@@ -287,7 +295,18 @@ func load_next_level():
 
 	if select_cards:
 		cards_canvas.visible = true
-	
+
+		# TODO: Generate real cards
+		var duration = randi_range(1, 3)
+
+		var s1 = StatModifier.new()
+		s1.initialize(randi_range(1, 5), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH, duration)
+
+		var m1 = CardModifier.new()
+		m1.duration_floors = duration
+		m1.modifiers.push_back(s1)
+		#m1.modifiers.push_back(s1)
+
 		var modifiers: Array[CardModifier] = []
 		for i in range(3):
 			var cardmod = create_card()
