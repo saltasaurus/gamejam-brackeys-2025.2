@@ -7,12 +7,17 @@ extends Interactable
 @onready var sprite: Sprite2D = $Sprite
 @onready var item_sprite: Sprite2D = $ItemSprite
 
+var is_open: bool = false
+
 signal opened(item: Item)
 
 func _ready() -> void:
 	item_sprite.visible = false
 
 func interact(_source: Entity) -> void:
+	# Prevent opening chest multiple times
+	if is_open:
+		return
 	sprite.texture = chest_open
 	
 	item_sprite.texture = item.texture
@@ -26,3 +31,5 @@ func interact(_source: Entity) -> void:
 	tween.tween_property(item_sprite, "modulate", fade_color, 0.5).set_trans(Tween.TRANS_SINE)
 
 	opened.emit(item)
+	is_open = true
+	

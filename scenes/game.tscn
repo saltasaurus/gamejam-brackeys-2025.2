@@ -25,13 +25,13 @@ metadata/_custom_type_script = "uid://cf4n0rsas64lj"
 
 [sub_resource type="Resource" id="Resource_e1j6l"]
 script = ExtResource("7_1kice")
-strength_amount = 8
+strength_amount = 1
 texture = ExtResource("8_5newe")
 metadata/_custom_type_script = "uid://cw0vu353hkrdw"
 
 [sub_resource type="Resource" id="Resource_rysoc"]
 script = ExtResource("7_1kice")
-strength_amount = 8
+strength_amount = 3
 texture = ExtResource("8_5newe")
 metadata/_custom_type_script = "uid://cw0vu353hkrdw"
 
