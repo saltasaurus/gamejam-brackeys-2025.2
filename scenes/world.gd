@@ -6,6 +6,8 @@ extends SubViewport
 const ENEMY_GROUP = "enemy"
 const ENTITY_GROUP = "entity"
 
+const ENTITY_ACTION_DELAY = 0.1
+
 @export var chest_items: Array[Item]
 #@export var modifiers: Array[StatModifier]
 
@@ -25,8 +27,9 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 var tile_size = 10
 var paused: bool = false
 var player_dead: bool = false
-var player_floor: int = 1
+var player_floor: int = 30
 var select_cards: bool = false
+var can_restart: bool = false
 
 #region Difficulty variables
 var num_chests = 0
@@ -51,7 +54,11 @@ func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
 	
 func _unhandled_input(event):
-	if player_dead:
+	if event.is_action_pressed("debug"):
+		_restart()
+		return
+
+	if can_restart:
 		if event.is_action_pressed("ui_accept"):
 			_restart()
 		return
@@ -190,12 +197,14 @@ func update_world():
 
 		match action.type:
 			EntityAction.Type.MOVE:
-				await move_entity(enemy, action.move_dir)
+				move_entity(enemy, action.move_dir)
 			EntityAction.Type.ATTACK_MELEE:
 				var target_entity = map.get_entity(enemy.position + (action.attack_dir * tile_size))
 				if target_entity != null:
-					await get_tree().create_timer(0.1).timeout
+					await get_tree().create_timer(ENTITY_ACTION_DELAY).timeout
 					await attack_melee(enemy, target_entity, action.attack_dir)
+
+	await get_tree().create_timer(ENTITY_ACTION_DELAY).timeout
 
 func setup_world():
 	for e in get_children():
@@ -230,7 +239,6 @@ func setup_world():
 func _create_and_place_chests() -> void:
 	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
-		# TODO: Random item
 		var item: Item = chest_items.pick_random()
 		if item == null:
 			item = DEFAULT_ITEM
@@ -345,6 +353,7 @@ func _on_player_died():
 	await wait_for_transition(transition, 1, 1)
 	death_canvas.visible = true
 	await wait_for_transition(transition, -1, 1)
+	can_restart = true
 
 func _restart():
 	print("Restarting")
