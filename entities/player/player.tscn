@@ -67,3 +67,6 @@ centered = false
 [node name="StatManager" type="Node" parent="."]
 script = ExtResource("3_sglur")
 metadata/_custom_type_script = "uid://c2blxx7evoghv"
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+current = true
