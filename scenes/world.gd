@@ -55,7 +55,7 @@ func _snap_entity_pos(e: Node2D) -> void:
 	
 func _unhandled_input(event):
 	if event.is_action_pressed("debug"):
-		_restart()
+		player.take_damage(100)
 		return
 
 	if can_restart:
@@ -213,8 +213,8 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
-	var width = 8 + (player_floor / 2)
-	var height = 8 + (player_floor / 2)
+	var width = 6 + (player_floor / 2)
+	var height = 6 + (player_floor / 2)
 	
 	var total_enemies: int = num_enemies + (player_floor / 3) + 1
 	var total_chests: int = num_chests + (player_floor / 10) + 1
@@ -293,7 +293,7 @@ func create_card() -> CardModifier:
 func load_next_level():
 	paused = true
 
-	await wait_for_transition(transition, 1, 1)
+	await show_transition(1)
 
 	# TODO: Real card selection logic
 	select_cards = player_floor % 1 == 0
@@ -309,7 +309,7 @@ func load_next_level():
 			
 		cards.show_cards(modifiers)
 
-		await wait_for_transition(transition, -1, 1)
+		await hide_transition(1)
 
 		var card_modifier: CardModifier = await cards.selected
 		print("Card selected: ", card_modifier.modifiers)
@@ -317,7 +317,7 @@ func load_next_level():
 		# Player updates stats by connecting to this signal
 		EventManager.emit_signal("card_selected", card_modifier)
 
-		await wait_for_transition(transition, 1, 1)
+		await show_transition(1)
 
 	cards_canvas.visible = false
 	setup_world()
@@ -325,10 +325,16 @@ func load_next_level():
 	# Tell UI to update
 	EventManager.emit_signal("level_passed", player_floor)
 
-	await wait_for_transition(transition, -1, 1)
+	await hide_transition(1)
 	paused = false
 
-func wait_for_transition(transition: ColorRect, final_val: Variant, duration: float) -> void:
+func show_transition(duration: float) -> void:
+	await wait_for_transition(1, duration)
+
+func hide_transition(duration: float):
+	await wait_for_transition(-1, duration)
+
+func wait_for_transition(final_val: Variant, duration: float) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(transition, "material:shader_parameter/height", final_val, duration)
 	await tween.finished
@@ -336,6 +342,8 @@ func wait_for_transition(transition: ColorRect, final_val: Variant, duration: fl
 func attack_melee(source: Entity, target: Entity, dir: Vector2) -> void:
 	await source.play_melee_attack_anim(dir)
 	var damage = source.stats.strength.adjustedValue - target.stats.defense.adjustedValue
+	if damage < 0:
+		damage = 0
 	target.take_damage(damage)
 	spawn_damage_indicator(damage, target.position + Vector2(4, -5))
 
@@ -350,9 +358,9 @@ func _on_player_died():
 	player.die()
 	player_dead = true
 	await get_tree().create_timer(0.5).timeout
-	await wait_for_transition(transition, 1, 1)
+	await show_transition(1)
 	death_canvas.visible = true
-	await wait_for_transition(transition, -1, 1)
+	await hide_transition(1)
 	can_restart = true
 
 func _restart():
