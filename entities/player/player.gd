@@ -17,8 +17,9 @@ func _ready() -> void:
 	
 ## Updates player stats based on selected card and emits
 ## player_stats_updated signal
-func _on_card_selected(card_mods: Array[StatModifier]) -> void:
-	for stat_mod in card_mods:
+func _on_card_selected(card: CardModifier) -> void:
+	
+	for stat_mod in card.modifiers:
 		stats.update_stat(stat_mod, tempStatManager)
 	
 	EventManager.emit_signal("player_stats_updated", stats)

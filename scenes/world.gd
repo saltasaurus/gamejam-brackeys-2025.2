@@ -7,7 +7,7 @@ const ENEMY_GROUP = "enemy"
 const ENTITY_GROUP = "entity"
 
 @export var chest_items: Array[Item]
-@export var modifiers: Array[StatModifier]
+#@export var modifiers: Array[StatModifier]
 
 static var DEFAULT_ITEM = load("res://items/basic_potion.tres")
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
@@ -30,7 +30,9 @@ var select_cards: bool = false
 
 #region Difficulty variables
 var num_chests = 1
-var num_enemies = 2
+var num_enemies = 2:
+	set(new_value):
+		num_enemies = max(1, num_enemies + new_value)
 var enemy_bonus_stats_count = 5
 #endregion
 
@@ -43,6 +45,7 @@ func _ready() -> void:
 	gui_disable_input = false
 	player.health_updated.connect(_on_player_health_updated)
 	EventManager.entity_died.connect(_on_entity_died)
+	EventManager.card_selected.connect(_on_card_selected)
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -74,7 +77,7 @@ func _unhandled_input(event):
 func _process(_delta: float) -> void:
 	if camera_follow_enabled:
 		camera.position = player.position
-		
+
 #region Signals
 func _on_player_health_updated(health: int):
 	# Is this circular?
@@ -91,7 +94,13 @@ func on_chest_opened(item: Item):
 	if item is HealthItem:
 		player.heal(item.heal_amount)
 	EventManager.emit_signal("player_stat_modified", item)
-	print("SENT ITEM DATA")
+	
+func _on_card_selected(card: CardModifier):
+	print("CARD ENEMY COUNT: ", card.enemy_count)
+	if card.enemy_count == null:
+		return
+	num_enemies += card.enemy_count
+	print("NUMBER ENEMIES: ", num_enemies)
 #endregion
 
 #region Entity movement
@@ -195,14 +204,14 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
-	var num_entities = (player_floor / 3) + 1
-	var num_chests = (player_floor / 10)
+	num_enemies = (player_floor / 3) + 1
+	num_chests = (player_floor / 10) + 1
 	var width = 10 + (player_floor / 3) + randi_range(0, 5)
 	var height = 10 + (player_floor / 3) + randi_range(0, 5)
 
 	map.generate(
 		num_chests,
-		num_entities,
+		num_enemies,
 		width,
 		height,
 	)
@@ -255,19 +264,23 @@ func _create_and_place_entities() -> void:
 
 func create_card_stats(duration: int) -> StatModifier:
 	var s1 = StatModifier.new()
-	s1.initialize(randi_range(1, 5), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH, duration)
+	s1.initialize(randi_range(1, 3), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH)
 	return s1
 
 func create_card() -> CardModifier:
-	var duration = randi_range(1, 3)
+	#var duration = randi_range(1, 3)
+	var duration = 0
 	var card = CardModifier.new()
 	card.duration_floors = duration
+	card.enemy_count = 3
 	
 	for i in range(1):
 		var card_stats = create_card_stats(duration)
 		card.modifiers.push_back(card_stats)
 	
+	
 	return card
+
 
 func load_next_level():
 	paused = true
@@ -276,13 +289,14 @@ func load_next_level():
 
 	# TODO: Real card selection logic
 	select_cards = player_floor % 1 == 0
+	print("SELECT CARDS: ", select_cards)
 
 	if select_cards:
 		cards_canvas.visible = true
 	
 		var modifiers: Array[CardModifier] = []
 		for i in range(3):
-			var cardmod = create_card()
+			var cardmod: CardModifier = create_card()
 			modifiers.push_back(cardmod)
 			
 		cards.show_cards(modifiers)
@@ -290,10 +304,10 @@ func load_next_level():
 		await wait_for_transition(transition, -1, 1)
 
 		var card_modifier: CardModifier = await cards.selected
-		
+		print("Card selected: ", card_modifier.modifiers)
 		# Only need to send Array[StatModifiers] bc duration is set above
 		# Player updates stats by connecting to this signal
-		EventManager.emit_signal("card_selected", card_modifier.modifiers)
+		EventManager.emit_signal("card_selected", card_modifier)
 
 		await wait_for_transition(transition, 1, 1)
 
