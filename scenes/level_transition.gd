@@ -1,6 +1,9 @@
 extends Control
 class_name LevelTransition
 
+const CARD_SELECTED_SOUND = preload("res://assets/sounds/card_selected.wav")
+const CARD_FOCUS_SOUND := preload("res://assets/sounds/focus_card.wav")
+
 static var card_scene = preload("res://scenes/Card.tscn")
 static var y_pos = 0
 
@@ -12,6 +15,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
 		var focused = get_viewport().gui_get_focus_owner()
 		if focused and focused is Card:
+			SoundManager.play(CARD_SELECTED_SOUND, position)
 			selected.emit((focused as Card).modifier)
 
 func clear_cards() -> void:
@@ -41,3 +45,9 @@ func show_cards(modifiers: Array[CardModifier]) -> void:
 		cards.push_back(card)
 
 	cards[0].grab_focus()
+
+	for c in cards:
+		c.focus_entered.connect(_on_card_focus_entered)
+
+func _on_card_focus_entered() -> void:
+	SoundManager.play(CARD_FOCUS_SOUND, position)

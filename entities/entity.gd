@@ -11,6 +11,8 @@ signal health_updated(health: int)
 # stats.health is the entity's BASE HEALTH.
 var health: int
 
+var hurt_sound: AudioStream = preload("res://assets/sounds/player_hurt.wav")
+
 func _ready() -> void:
 	stats._init()
 	# Uses an implicit, duck-typed interface for any compatible resources
@@ -50,6 +52,8 @@ func take_damage(damage: int) -> void:
 	health -= damage
 	if health < 0:
 		health = 0
+
+	SoundManager.play(hurt_sound, position)
 	
 	health_updated.emit(health)
 

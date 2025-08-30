@@ -18,6 +18,7 @@ config/icon="res://assets/icon.svg"
 [autoload]
 
 EventManager="*res://scripts/EventManager.gd"
+SoundManager="*res://scripts/SoundManager.gd"
 
 [debug]
 

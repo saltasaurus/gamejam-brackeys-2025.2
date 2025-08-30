@@ -1,6 +1,8 @@
 class_name Chest
 extends Interactable
 
+static var OPEN_SOUND := preload("res://assets/sounds/open_chest.wav")
+
 @export var chest_open: Texture2D
 @export var item: Item
 
@@ -29,6 +31,8 @@ func interact(_source: Entity) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(item_sprite, "position", target_pos, 0.1).set_trans(Tween.TRANS_ELASTIC)
 	tween.tween_property(item_sprite, "modulate", fade_color, 0.5).set_trans(Tween.TRANS_SINE)
+
+	SoundManager.play(OPEN_SOUND, position)
 
 	opened.emit(item)
 	is_open = true
