@@ -35,8 +35,8 @@ func rand_pos() -> Vector2i:
 	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_height - 2))
 
 func generate(num_chests: int, num_enemies: int, width: int, height: int):
-	map_width = width
-	map_height = height
+	map_width = width + 2
+	map_height = height + 2
 	start_point = rand_pos()
 	end_point = rand_pos()
 
@@ -73,7 +73,7 @@ func generate_maze():
 		for y in range(map_height):
 			_map[Vector2i(x, y)] = WALL_TILE
 
-	carve(Vector2i(1, 1))
+	carve(Vector2i(2, 2))
 
 func carve(pos: Vector2i):
 	_map[pos] = FLOOR_TILE
@@ -93,6 +93,11 @@ func carve(pos: Vector2i):
 			_map[wall_pos] = FLOOR_TILE
 			carve(next_pos)
 
+func _is_in_maze_bounds(pos: Vector2i) -> bool:
+	# In bounds for the generated map which is actually smaller than the full map
+	# Need to have a border of wall around the map, which takes one cell on each side.
+	return pos.x > 1 and pos.x < map_width - 1 and pos.y > 1 and pos.y < map_height - 1
+
 func _find_dead_ends() -> Dictionary[Vector2i, bool]:
 	var dead_ends: Dictionary[Vector2i, bool] = {}
 	for pos in _map.keys():
@@ -110,11 +115,6 @@ func _find_dead_ends() -> Dictionary[Vector2i, bool]:
 			if neighbors == 1:
 				dead_ends[pos] = true
 	return dead_ends
-
-func _is_in_maze_bounds(pos: Vector2i) -> bool:
-	# In bounds for the generated map which is actually smaller than the full map
-	# Need to have a border of wall around the map, which takes one cell on each side.
-	return pos.x > 0 and pos.x < map_width  and pos.y > 0 and pos.y < map_height
 
 func _create_room(center: Vector2i, radius: int) -> void:
 	for x in range(-radius, radius + 1):
