@@ -25,6 +25,7 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 @onready var death_canvas = $DeathCanvas
 @onready var camera = $Camera
 @onready var transition: ColorRect = $EffectsCanvas/Transition
+@onready var EnemySpawner: WeightRandom = $EnemySpawner
 
 var tile_size = 10
 var paused: bool = false
@@ -55,7 +56,15 @@ const PHRASES = [
 	"Lettuce play a game",
 	"Anyone can cook!",
 	"One can get too familiar with vegetables, you know",
-	"The soup! Where is the soup?"
+	"The soup! Where is the soup?",
+	"Don't get whisked away",
+	"Oh honey",
+	"You are cooking",
+	"Working hard or hardly working",
+	"An apple a day",
+	"You're toast out there",
+	"Both the bread and le pain",
+	"Creme de la creme"
 ]
 
 func _ready() -> void:
@@ -65,6 +74,7 @@ func _ready() -> void:
 	player.health_updated.connect(_on_player_health_updated)
 	EventManager.entity_died.connect(_on_entity_died)
 	EventManager.card_selected.connect(_on_card_selected)
+	
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -119,11 +129,9 @@ func on_chest_opened(item: Item):
 	EventManager.emit_signal("player_stat_modified", item)
 	
 func _on_card_selected(card: CardModifier):
-	print("CARD ENEMY COUNT: ", card.enemy_count)
 	if card.enemy_count == null:
 		return
 	num_enemies += card.enemy_count
-	print("NUMBER ENEMIES: ", num_enemies)
 #endregion
 
 #region Entity movement
@@ -229,6 +237,9 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
+	if player_floor % 5 == 4: # Every 5 rounds, skipping the first
+		EnemySpawner.update_weights()
+
 	var width = 6 + (player_floor / 2)
 	var height = 6 + (player_floor / 2)
 	
@@ -240,6 +251,8 @@ func setup_world():
 		width,
 		height,
 	)
+	
+	
 
 	# THIS SHOULD STAY HERE
 	# OTHERWISE _create_and_place_entities WILL OPERATE ON AN
@@ -250,6 +263,7 @@ func setup_world():
 	_create_and_place_chests()
 	_create_and_place_enemies()
 	_create_and_place_entities()
+
 
 
 func _create_and_place_chests() -> void:
@@ -265,8 +279,12 @@ func _create_and_place_chests() -> void:
 		map.occupy(c.position, c)
 
 func _create_and_place_enemies() -> void:
+	#var enemy_list: Array = [basic_enemy_scene]
+	#var spawn_weights: Array[float] = [1.0]
 	for cell in map.enemies:
-		var e = basic_enemy_scene.instantiate() as Enemy
+		var picked_enemy = EnemySpawner.pick_object()
+		var e = picked_enemy.instantiate() as Enemy
+		#var e = basic_enemy_scene.instantiate() as Enemy
 		e.stats = _get_enemy_stats(e.stats)
 		e.position = cell * tile_size
 		add_child(e)
@@ -313,7 +331,6 @@ func load_next_level():
 
 	# TODO: Real card selection logic
 	select_cards = player_floor % 1 == 0
-	print("SELECT CARDS: ", select_cards)
 
 	if select_cards:
 		cards_canvas.visible = true
@@ -329,7 +346,6 @@ func load_next_level():
 		await hide_transition(1)
 
 		var card_modifier: CardModifier = await cards.selected
-		print("Card selected: ", card_modifier.modifiers)
 		# Only need to send Array[StatModifiers] bc duration is set above
 		# Player updates stats by connecting to this signal
 		EventManager.emit_signal("card_selected", card_modifier)
