@@ -18,7 +18,7 @@ func _ready() -> void:
 func _on_card_selected(card: CardModifier) -> void:
 	
 	for stat_mod in card.modifiers:
-		stats.update_stat(stat_mod, tempStatManager)
+		stats.update_stat(stat_mod, null)
 	
 	EventManager.emit_signal("player_stats_updated", stats)
 

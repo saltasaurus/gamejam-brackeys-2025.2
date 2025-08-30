@@ -19,7 +19,7 @@
 [ext_resource type="Script" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="12_trtic"]
 [ext_resource type="Texture2D" uid="uid://cdtojg6wpebrl" path="res://assets/characters/chef_dead.png" id="15_rysoc"]
-[ext_resource type="Script" uid="uid://d40dnllvu155" path="res://weighted_random.gd" id="17_ssvqc"]
+[ext_resource type="Script" path="res://weighted_random.gd" id="17_ssvqc"]
 
 [sub_resource type="Resource" id="Resource_dinhu"]
 script = ExtResource("5_vtaks")
