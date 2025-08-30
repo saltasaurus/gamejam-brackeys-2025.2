@@ -206,8 +206,8 @@ func setup_world():
 
 	num_enemies = (player_floor / 3) + 1
 	num_chests = (player_floor / 10) + 1
-	var width = 10 + (player_floor / 3) + randi_range(0, 5)
-	var height = 10 + (player_floor / 3) + randi_range(0, 5)
+	var width = 8 + (player_floor / 2)
+	var height = 8 + (player_floor / 2)
 
 	map.generate(
 		num_chests,

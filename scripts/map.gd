@@ -4,7 +4,7 @@ extends TileMapLayer
 @export var fill_percent := 45
 @export var smoothing_iterations := 4
 @export var min_cave_size := 50
-@export var room_radius := 4
+@export var room_radius := 2
 
 var map_width := 10
 var map_height := 10
@@ -28,6 +28,9 @@ var occupied: Dictionary[Vector2i, Node2D] = {}
 var chests: Array[Vector2i] = []
 var enemies: Array[Vector2i] = []
 
+var free_cells: Dictionary[Vector2i, bool]
+var free_dead_end_cells: Dictionary[Vector2i, bool]
+
 func rand_pos() -> Vector2i:
 	return Vector2i(randi_range(1, map_width - 2), randi_range(1, map_height - 2))
 
@@ -37,77 +40,81 @@ func generate(num_chests: int, num_enemies: int, width: int, height: int):
 	start_point = rand_pos()
 	end_point = rand_pos()
 
-	var valid := false
+	clear()
+	_map.clear()
+	chests.clear()
+	occupied.clear()
+	enemies.clear()
+	free_cells.clear()
+	free_dead_end_cells.clear()
 
-	while not valid:
-		clear()
-		_map.clear()
-		chests.clear()
-		occupied.clear()
-		enemies.clear()
+	generate_maze()
 
-		# seed(seed_value)
+	_create_room(start_point, room_radius)
+	_create_room(end_point, room_radius)
 
-		_init_map()
-		for i in smoothing_iterations:
-			_smooth_map()
+	_force_walls()
+	_place_stairs()
 
-		_create_room(start_point, room_radius)
-		_create_room(end_point, room_radius)
+	_apply_to_tilemap()
 
-		_force_walls()
-		_place_stairs()
+	free_dead_end_cells = _find_dead_ends()
+	for cell in get_used_cells():
+		if _map[cell] == FLOOR_TILE and cell != start_point and cell != end_point:
+			free_cells[cell] = true
 
-		_apply_to_tilemap()
+	chests = _place_random(num_chests, free_dead_end_cells)
+	enemies = _place_random(num_enemies, free_cells)
 
-		var open_cells: Array[Vector2i] = []
-		for cell in get_used_cells():
-			if is_walkable(cell) and cell != start_point and cell != end_point:
-				open_cells.push_back(cell)
-		
-		chests = _place_random(open_cells, num_chests)
-		enemies = _place_random(open_cells, num_enemies)
-
-		_build_pathfinding()
-
-		valid = _is_valid_map()
-
-func _init_map():
-	for x in range(map_width):
-		for y in range(map_height):
-			var pos := Vector2i(x, y)
-			# Fill edges with walls
-			if x == 0 || x == map_width - 1 || y == 0 || y == map_height - 1:
-				_map[pos] = WALL_TILE
-			else:
-				_map[pos] = WALL_TILE if randf() * 100 < fill_percent else FLOOR_TILE
-
-func _smooth_map() -> void:
-	var new_map: Dictionary[Vector2i, int] = {}
-	for x in range(map_width):
-		for y in range(map_height):
-			var pos := Vector2i(x, y)
-			var wall_count := _get_surrounding_wall_count(pos)
-			
-			# Apply cellular automata rules
-			if wall_count > 4:
-				new_map[pos] = WALL_TILE
-			elif wall_count < 4:
-				new_map[pos] = FLOOR_TILE
-			else:
-				new_map[pos] = _map[pos]
+	_build_pathfinding()
 	
-	_map = new_map
+func generate_maze():
+	for x in range(map_width):
+		for y in range(map_height):
+			_map[Vector2i(x, y)] = WALL_TILE
 
-func _get_surrounding_wall_count(pos: Vector2i) -> int:
-	var wall_count := 0
-	for x in range(-1, 2):
-		for y in range(-1, 2):
-			var check_pos := Vector2i(pos.x + x, pos.y + y)
-			if check_pos != pos:
-				if _map.get(check_pos, WALL_TILE) == WALL_TILE:  # Default to wall if outside bounds
-					wall_count += 1
-	return wall_count
+	carve(Vector2i(1, 1))
+
+func carve(pos: Vector2i):
+	_map[pos] = FLOOR_TILE
+
+	var directions = [
+		Vector2i.UP,
+		Vector2i.DOWN,
+		Vector2i.LEFT,
+		Vector2i.RIGHT,
+	]
+	directions.shuffle()
+
+	for dir in directions:
+		var next_pos = pos + (2 * dir)
+		if _is_in_maze_bounds(next_pos) and _map[next_pos] == WALL_TILE:
+			var wall_pos = pos + dir
+			_map[wall_pos] = FLOOR_TILE
+			carve(next_pos)
+
+func _find_dead_ends() -> Dictionary[Vector2i, bool]:
+	var dead_ends: Dictionary[Vector2i, bool] = {}
+	for pos in _map.keys():
+		if _map[pos] == FLOOR_TILE:
+			var neighbors = 0
+			var directions = [
+				Vector2i.UP,
+				Vector2i.DOWN,
+				Vector2i.LEFT,
+				Vector2i.RIGHT,
+			]
+			for dir in directions:
+				if _map.has(pos + dir) and _map[pos + dir] == FLOOR_TILE:
+					neighbors += 1
+			if neighbors == 1:
+				dead_ends[pos] = true
+	return dead_ends
+
+func _is_in_maze_bounds(pos: Vector2i) -> bool:
+	# In bounds for the generated map which is actually smaller than the full map
+	# Need to have a border of wall around the map, which takes one cell on each side.
+	return pos.x > 0 and pos.x < map_width  and pos.y > 0 and pos.y < map_height
 
 func _create_room(center: Vector2i, radius: int) -> void:
 	for x in range(-radius, radius + 1):
@@ -183,17 +190,20 @@ func _build_pathfinding() -> void:
 			if pathfinding.get_point_position(i).distance_to(pathfinding.get_point_position(j)) == 1:
 				pathfinding.connect_points(i, j)
 
-func _place_random(open_cells: Array[Vector2i], num: int) -> Array[Vector2i]:
+func _place_random(num: int, source: Dictionary[Vector2i, bool]) -> Array[Vector2i]:
 	var res: Array[Vector2i] = []
 	for i in range(num):
-		if open_cells.size() == 0:
+		if source.size() == 0:
 			printerr("No open cells left")
 			break 
 
-		var idx = randi_range(0, open_cells.size() - 1)
-		var pos = open_cells[idx]
-		open_cells.remove_at(idx)
+		var idx = randi_range(0, source.size() - 1)
+		var pos = source.keys()[idx]
 		res.push_back(pos)
+
+		# Erase from all cell tracking containers
+		free_cells.erase(pos)
+		free_dead_end_cells.erase(pos)
 
 	return res
 

@@ -25,7 +25,7 @@ metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
 [sub_resource type="Resource" id="Resource_kvuet"]
 script = ExtResource("5_vtaks")
-baseValue = 100
+baseValue = 10
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
 [sub_resource type="Resource" id="Resource_trtic"]
@@ -88,16 +88,16 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.39, 0.39, 0.39, 1)
 
-[node name="BackgroundCanvas" type="CanvasLayer" parent="World"]
-layer = -1
-
-[node name="Background" type="ColorRect" parent="World/BackgroundCanvas"]
+[node name="Background2" type="ColorRect" parent="World/BackgroundCanvas"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.39, 0.39, 0.39, 1)
+
+[node name="BackgroundCanvas2" type="CanvasLayer" parent="World"]
+layer = -1
 
 [node name="Player" parent="World" instance=ExtResource("2_p57ef")]
 position = Vector2(10, 20)
