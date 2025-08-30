@@ -192,7 +192,6 @@ func update_world():
 					await attack_melee(enemy, target_entity, action.attack_dir)
 
 func setup_world():
-	# Hacky way to clear world between levels
 	for e in get_children():
 		if e is Chest:
 			e.free()
@@ -212,6 +211,8 @@ func setup_world():
 	)
 
 	# THIS SHOULD STAY HERE
+	# OTHERWISE _create_and_place_entities WILL OPERATE ON AN
+	# OLD VERSION OF THE PLAYER POSITION
 	player.position = map.start_point * tile_size
 	camera.position = player.position
 
