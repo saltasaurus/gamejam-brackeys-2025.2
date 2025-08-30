@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://iu2i20icpjiu"]
+[gd_scene load_steps=11 format=3 uid="uid://iu2i20icpjiu"]
 
 [ext_resource type="Script" uid="uid://dl74rdbp0k6se" path="res://entities/player/player.gd" id="1_onrkg"]
 [ext_resource type="Texture2D" uid="uid://cdtojg6wpebrl" path="res://assets/characters/chef_dead.png" id="2_bls4j"]
 [ext_resource type="Texture2D" uid="uid://b05vm0tbg12im" path="res://assets/characters/chef_simple-Sheet.png" id="2_sglur"]
 [ext_resource type="Script" uid="uid://c2blxx7evoghv" path="res://scripts/stats/temp_stats_manager.gd" id="3_sglur"]
+[ext_resource type="Script" uid="uid://b1rg6rfkgunt8" path="res://scripts/animation_handler.gd" id="4_fkugw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qiwj3"]
 atlas = ExtResource("2_bls4j")
@@ -64,6 +65,7 @@ sprite_frames = SubResource("SpriteFrames_qiwj3")
 animation = &"face_left"
 centered = false
 offset = Vector2(-1, -1)
+script = ExtResource("4_fkugw")
 
 [node name="StatManager" type="Node" parent="."]
 script = ExtResource("3_sglur")

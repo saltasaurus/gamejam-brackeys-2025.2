@@ -15,16 +15,8 @@ var hurt_sound: AudioStream = preload("res://assets/sounds/player_hurt.wav")
 
 func _ready() -> void:
 	stats._init()
-	# Uses an implicit, duck-typed interface for any compatible resources
-	print("ENEMY STATS")
-	print("===========")
-	print("Health: ", stats.health.adjustedValue) 
-	print("Strength: ", stats.strength.adjustedValue)
-	print("Speed: ", stats.speed.adjustedValue)
-	print("Defense: ", stats.defense.adjustedValue)
-	print()
 
-	health = stats.health.baseValue
+	health = stats.health.adjustedValue
 
 	health_updated.emit.call_deferred(health)
 
