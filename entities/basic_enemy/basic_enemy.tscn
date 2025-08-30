@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://dpfmb1jollxg1"]
 
-[ext_resource type="Texture2D" uid="uid://c8er5wb3roeqk" path="res://assets/basic-enemy.png" id="1_naotq"]
+[ext_resource type="Texture2D" uid="uid://c8er5wb3roeqk" path="res://assets/characters/basic-enemy.png" id="1_naotq"]
 [ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="2_rwafm"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="3_ruxsg"]
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="4_vildc"]

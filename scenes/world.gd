@@ -86,6 +86,7 @@ func on_chest_opened(item: Item):
 func move_player(dir):
 	var entity = get_adjacent_entity(player.position, dir)
 	var _update_world = false
+	player.face_direction(dir) # Want to face direction for walking AND attacking
 	if entity != null:
 		if entity is Enemy:
 			camera_follow_enabled = false
@@ -105,17 +106,22 @@ func move_player(dir):
 		paused = true
 		await update_world()
 		paused = false
-
-func move_entity(entity: Node2D, dir: Vector2) -> bool:
+	
+func move_entity(entity: Entity, dir: Vector2) -> bool:
 	var movement: Vector2 = dir * tile_size
 	var next_position = entity.position + movement
 	
 	if map.is_walkable(map.local_to_map(next_position)):
 		map.vacate(entity.position)
 		map.occupy(next_position, entity)
-		var tween = get_tree().create_tween()
-		tween.tween_property(entity, "position", next_position, 0.05)
-		await tween.finished
+
+		if entity.on_screen.is_on_screen():
+			var tween = get_tree().create_tween()
+			tween.tween_property(entity, "position", next_position, 0.05)
+			await tween.finished
+		else:
+			entity.position = next_position
+
 		return true
 
 	return false
@@ -145,31 +151,11 @@ func get_adjacent_player_dir(pos: Vector2) -> Vector2:
 			return dir
 	return Vector2.ZERO
 
-func move_entity(entity: Entity, dir: Vector2) -> bool:
-	var movement: Vector2 = dir * tile_size
-	var next_position = entity.position + movement
-	
-	if map.is_walkable(map.local_to_map(next_position)):
-		map.vacate(entity.position)
-		map.occupy(next_position, entity)
 
-		if entity.on_screen.is_on_screen():
-			var tween = get_tree().create_tween()
-			tween.tween_property(entity, "position", next_position, 0.05)
-			await tween.finished
-		else:
-			entity.position = next_position
-
-		return true
-
-	return false
 
 func on_stairs(e: Node2D) -> bool:
 	return map.is_stairs(map.local_to_map(e.position))
 #endregion
-
-
-
 
 
 func update_world():

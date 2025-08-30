@@ -1,13 +1,9 @@
 [gd_resource type="Resource" script_class="StatItem" load_steps=3 format=3 uid="uid://bble1xk1pva0a"]
 
-[ext_resource type="Script" uid="uid://cw0vu353hkrdw" path="res://items/stat_item.gd" id="1_dmtfs"]
+[ext_resource type="Script" path="res://items/stat_item.gd" id="1_dmtfs"]
 [ext_resource type="Texture2D" uid="uid://c3br6fosuifw6" path="res://assets/ui/defense.png" id="2_po2e0"]
 
 [resource]
 script = ExtResource("1_dmtfs")
 texture = ExtResource("2_po2e0")
-target = 2
-value = 1
-type = 0
-duration = 0.0
 metadata/_custom_type_script = "uid://cw0vu353hkrdw"

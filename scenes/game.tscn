@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://b3d3152u4ku07" path="res://items/item.gd" id="4_rysoc"]
 [ext_resource type="Script" uid="uid://ddsmk3umtytif" path="res://scripts/map.gd" id="5_0tnpc"]
 [ext_resource type="Resource" uid="uid://1mxmgi5b47nt" path="res://items/basic_potion.tres" id="5_kvuet"]
-[ext_resource type="TileSet" uid="uid://hennwlx7g0g4" path="res://assets/biscuit_tiles.tres" id="5_p57ef"]
+[ext_resource type="TileSet" uid="uid://hennwlx7g0g4" path="res://assets/tiles/biscuit_tiles.tres" id="5_p57ef"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="5_vtaks"]
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="6_kvpfn"]
 [ext_resource type="Resource" uid="uid://crdwgyenf6lfd" path="res://items/weak_weapon.tres" id="6_trtic"]

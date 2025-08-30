@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=2 format=3 uid="uid://df4ds2sll8g6l"]
 
-[ext_resource type="FontFile" uid="uid://bmcy3obshpyvv" path="res://assets/pixelmix.ttf" id="1_udl1o"]
+[ext_resource type="FontFile" uid="uid://bmcy3obshpyvv" path="res://assets/fonts/pixelmix.ttf" id="1_udl1o"]
 
 [resource]
 Label/font_sizes/font_size = 8

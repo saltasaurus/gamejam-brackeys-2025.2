@@ -1,8 +1,10 @@
 class_name Player
 extends Entity
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var tempStatManager : TempStatManager = $StatManager
+
+var _last_facing_direction: String = "face_right"
 
 func _ready() -> void:
 	super._ready()
@@ -27,3 +29,21 @@ func _on_player_stat_modified(_statmod: StatModifier):
 	print("UPDATED PLAYER STAT")
 	print(stats.strength)
 	
+func _get_direction(dir: Vector2) -> String:
+	if dir.y < 0: # Up decreases Y
+		return "face_up"
+	
+	# If dir.x == 0: don't change current facing direction
+	if dir.x < 0:
+		return "face_left"
+	if dir.x > 0:
+		return "face_right"
+	
+	return _last_facing_direction
+	
+func face_direction(dir: Vector2) -> void:
+	var current_direction: String = _get_direction(dir)
+	sprite.play(_get_direction(dir))
+	
+	
+		
