@@ -1,41 +1,35 @@
 [gd_scene load_steps=4 format=3 uid="uid://b6pajlkpkp4nu"]
 
-[ext_resource type="Texture2D" uid="uid://w7v1c7al341p" path="res://assets/ui/card.png" id="1_tgmmg"]
 [ext_resource type="Script" uid="uid://b03nughnjoxe6" path="res://scenes/card.gd" id="1_yiag5"]
-[ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="3_4dx8l"]
+[ext_resource type="Texture2D" uid="uid://cxrj5vtstfmi1" path="res://assets/ui/card-top.png" id="2_4dx8l"]
+[ext_resource type="Texture2D" uid="uid://bmetaa2n0228s" path="res://assets/ui/card-base.png" id="2_tgmmg"]
 
-[node name="Card" type="NinePatchRect"]
+[node name="Card" type="Control"]
 custom_minimum_size = Vector2(54, 72)
+layout_mode = 3
+anchors_preset = 0
 offset_right = 54.0
 offset_bottom = 72.0
 focus_mode = 2
-mouse_filter = 0
-texture = ExtResource("1_tgmmg")
-patch_margin_left = 5
-patch_margin_top = 5
-patch_margin_right = 5
-patch_margin_bottom = 5
 script = ExtResource("1_yiag5")
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 2.0
-offset_top = 4.0
-offset_right = 38.0
-offset_bottom = 56.0
+offset_top = 18.0
+offset_right = 54.0
+offset_bottom = 62.0
+alignment = 1
 
-[node name="Duration" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -9.0
-offset_top = -11.0
-offset_right = 9.0
-offset_bottom = -2.0
-grow_horizontal = 2
-grow_vertical = 0
-theme = ExtResource("3_4dx8l")
-text = "foo"
+[node name="Top" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 54.0
+offset_bottom = 19.0
+texture = ExtResource("2_4dx8l")
+
+[node name="Base" type="TextureRect" parent="."]
+layout_mode = 0
+offset_top = 61.0
+offset_right = 54.0
+offset_bottom = 72.0
+texture = ExtResource("2_tgmmg")
+stretch_mode = 2

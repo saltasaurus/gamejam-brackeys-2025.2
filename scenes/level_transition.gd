@@ -2,7 +2,7 @@ extends Control
 class_name LevelTransition
 
 static var card_scene = preload("res://scenes/Card.tscn")
-static var y_pos = 40
+static var y_pos = 0
 
 var cards: Array[Card] = []
 

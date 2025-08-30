@@ -1,12 +1,12 @@
 class_name Card
-extends NinePatchRect
+extends Control
 
 static var card_scene = preload("res://scenes/CardModifier.tscn")
 
 var modifier: CardModifier
 
 @onready var vbox = $VBox
-@onready var duration_label: Label = $Duration
+@onready var top = $Top
 
 var focused_pos
 var unfocused_pos
@@ -17,10 +17,13 @@ func _ready() -> void:
 		vbox.add_child(card)
 		card.set_modifier(m)
 
-	duration_label.text = str(modifier.duration_floors) + " floors"
+	if modifier.enemy_count > 0:
+		var mod: CardModifierUI = (card_scene.instantiate() as CardModifierUI)
+		vbox.add_child(mod)
+		mod.set_enemy_count(modifier.enemy_count)
 
 func _process(_delta: float) -> void:
 	if has_focus():
-		position.y = focused_pos
+		top.position.y = focused_pos
 	else:
-		position.y = unfocused_pos
+		top.position.y = unfocused_pos

@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://gswk5worucus" path="res://scenes/level_transition.gd" id="1_2ybma"]
 
 [node name="LevelTransition" type="Control"]
-custom_minimum_size = Vector2(240, 180)
+custom_minimum_size = Vector2(240, 80)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1360.0
-offset_bottom = -720.0
+offset_bottom = -820.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2ybma")

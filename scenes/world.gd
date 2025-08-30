@@ -19,7 +19,8 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 
 @onready var player = $Player
 @onready var map: Map = $ProcMap
-@onready var cards = $CardsCanvas/Cards
+@onready var cards = $CardsCanvas/VBoxContainer/Cards
+@onready var level_transition_phrase = $CardsCanvas/VBoxContainer/Phrase
 @onready var cards_canvas = $CardsCanvas
 @onready var death_canvas = $DeathCanvas
 @onready var camera = $Camera
@@ -41,6 +42,18 @@ var enemy_bonus_stats_count = 5
 
 var camera_follow_enabled: bool = true
 #endregion
+
+const PHRASES = [
+	"Pick your plate",
+	"You're in a pickle now",
+	"PO-TA-TOES",
+	"This is getting spicy",
+	"Risk it for the biscuit",
+	"Eggscuse me",
+	"Batter up",
+	"There's a lot at steak here",
+	"Lettuce play a game"
+]
 
 func _ready() -> void:
 	setup_world()
@@ -308,6 +321,7 @@ func load_next_level():
 			modifiers.push_back(cardmod)
 			
 		cards.show_cards(modifiers)
+		level_transition_phrase.text = PHRASES.pick_random() + "..."
 
 		await hide_transition(1)
 
