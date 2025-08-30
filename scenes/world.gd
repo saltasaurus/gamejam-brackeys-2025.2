@@ -18,10 +18,13 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 @onready var map: Map = $ProcMap
 @onready var cards = $CardsCanvas/Cards
 @onready var cards_canvas = $CardsCanvas
+@onready var death_canvas = $DeathCanvas
 @onready var camera = $Camera
+@onready var transition: ColorRect = $EffectsCanvas/Transition
 
 var tile_size = 10
 var paused: bool = false
+var player_dead: bool = false
 var player_floor: int = 1
 var select_cards: bool = false
 
@@ -39,28 +42,34 @@ func _ready() -> void:
 	cards_canvas.visible = false
 	gui_disable_input = false
 	player.health_updated.connect(_on_player_health_updated)
-
 	EventManager.entity_died.connect(_on_entity_died)
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
 	
 func _unhandled_input(event):
-	if paused:
+	if player_dead:
+		if event.is_action_pressed("ui_accept"):
+			_restart()
+		return
+
+	if paused or player_dead:
 		return
 
 	paused = true
+	var _update_world = false
 	if event.is_action_pressed("move_left"):
-		await move_player(Vector2.LEFT)
+		_update_world = await move_player(Vector2.LEFT)
 	elif event.is_action_pressed("move_right"):
-		await move_player(Vector2.RIGHT)
+		_update_world = await move_player(Vector2.RIGHT)
 	elif event.is_action_pressed("move_up"):
-		await move_player(Vector2.UP)
+		_update_world = await move_player(Vector2.UP)
 	elif event.is_action_pressed("move_down"):
-		await move_player(Vector2.DOWN)
+		_update_world = await move_player(Vector2.DOWN)
+
+	if _update_world:
+		await update_world()
 	paused = false
-
-
 
 func _process(_delta: float) -> void:
 	if camera_follow_enabled:
@@ -72,8 +81,11 @@ func _on_player_health_updated(health: int):
 	EventManager.player_health_updated.emit(health)
 
 func _on_entity_died(e: Entity):
-	map.vacate(e.position)
-	e.queue_free()
+	if e is Player:
+		_on_player_died()
+	else:
+		map.vacate(e.position)
+		e.queue_free()
 	
 func on_chest_opened(item: Item):
 	if item is HealthItem:
@@ -83,7 +95,7 @@ func on_chest_opened(item: Item):
 #endregion
 
 #region Entity movement
-func move_player(dir):
+func move_player(dir) -> bool:
 	var entity = get_adjacent_entity(player.position, dir)
 	var _update_world = false
 	player.face_direction(dir) # Want to face direction for walking AND attacking
@@ -98,14 +110,11 @@ func move_player(dir):
 			_update_world = true
 	elif await move_entity(player, dir):
 		if on_stairs(player):
-			load_next_level()
+			await load_next_level()
 		else:
 			_update_world = true
 
-	if _update_world:
-		paused = true
-		await update_world()
-		paused = false
+	return _update_world
 	
 func move_entity(entity: Entity, dir: Vector2) -> bool:
 	var movement: Vector2 = dir * tile_size
@@ -264,7 +273,6 @@ func create_card() -> CardModifier:
 
 func load_next_level():
 	paused = true
-	var transition: ColorRect = $EffectsCanvas/Transition
 
 	await wait_for_transition(transition, 1, 1)
 
@@ -316,3 +324,16 @@ func spawn_damage_indicator(val: int, pos: Vector2):
 	s.position = pos
 	s.text = str(val)
 	add_child(s)
+
+func _on_player_died():
+	paused = true
+	player.die()
+	player_dead = true
+	await get_tree().create_timer(0.5).timeout
+	await wait_for_transition(transition, 1, 1)
+	death_canvas.visible = true
+	await wait_for_transition(transition, -1, 1)
+
+func _restart():
+	print("Restarting")
+	get_tree().change_scene_to_file("res://scenes/game.tscn")

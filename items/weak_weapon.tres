@@ -1,9 +1,13 @@
 [gd_resource type="Resource" script_class="StatItem" load_steps=3 format=3 uid="uid://crdwgyenf6lfd"]
 
-[ext_resource type="Script" uid="uid://cw0vu353hkrdw" path="res://items/stat_item.gd" id="1_opapl"]
+[ext_resource type="Script" path="res://items/stat_item.gd" id="1_opapl"]
 [ext_resource type="Texture2D" uid="uid://p8so4riqyj0p" path="res://assets/ui/damage.png" id="2_opapl"]
 
 [resource]
 script = ExtResource("1_opapl")
 texture = ExtResource("2_opapl")
+target = 0
+value = 0
+type = 0
+duration = 0.0
 metadata/_custom_type_script = "uid://cw0vu353hkrdw"

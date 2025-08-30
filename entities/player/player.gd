@@ -45,5 +45,5 @@ func face_direction(dir: Vector2) -> void:
 	var current_direction: String = _get_direction(dir)
 	sprite.play(_get_direction(dir))
 	
-	
-		
+func die() -> void:
+	sprite.play("die")

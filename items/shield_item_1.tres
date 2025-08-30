@@ -6,4 +6,8 @@
 [resource]
 script = ExtResource("1_dmtfs")
 texture = ExtResource("2_po2e0")
+target = 0
+value = 0
+type = 0
+duration = 0.0
 metadata/_custom_type_script = "uid://cw0vu353hkrdw"
