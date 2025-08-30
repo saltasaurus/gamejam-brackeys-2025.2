@@ -29,5 +29,5 @@ func _on_player_stat_modified(_statmod: StatModifier):
 	print(stats.strength)
 	
 func face_direction(dir: Vector2) -> void:
-	#sprite.face_direction(dir)
+	sprite.face_direction(dir)
 	pass
