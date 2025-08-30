@@ -211,14 +211,14 @@ func setup_world():
 		height,
 	)
 
+	# THIS SHOULD STAY HERE
+	player.position = map.start_point * tile_size
+	camera.position = player.position
+
 	_create_and_place_chests()
 	_create_and_place_enemies()
 	_create_and_place_entities()
 
-	player.position = map.start_point * tile_size
-	camera.position = player.position
-
-	
 
 func _create_and_place_chests() -> void:
 	for cell in map.chests:
@@ -252,8 +252,8 @@ func _get_enemy_stats(current_stats: CharacterStats) -> CharacterStats:
 
 func _create_and_place_entities() -> void:
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
-		map.occupy(e.position, e)
 		_snap_entity_pos(e)
+		map.occupy(e.position, e)
 
 func create_card_stats(duration: int) -> StatModifier:
 	var s1 = StatModifier.new()
