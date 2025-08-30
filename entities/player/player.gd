@@ -25,8 +25,6 @@ func _on_card_selected(card: CardModifier) -> void:
 func _on_player_stat_modified(_statmod: StatModifier):
 	stats.update_stat(_statmod, null)
 	EventManager.emit_signal("player_stats_updated", stats)
-	print("UPDATED PLAYER STAT")
-	print(stats.strength)
 	
 func face_direction(dir: Vector2) -> void:
 	sprite.face_direction(dir)

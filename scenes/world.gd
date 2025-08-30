@@ -129,11 +129,9 @@ func on_chest_opened(item: Item):
 	EventManager.emit_signal("player_stat_modified", item)
 	
 func _on_card_selected(card: CardModifier):
-	print("CARD ENEMY COUNT: ", card.enemy_count)
 	if card.enemy_count == null:
 		return
 	num_enemies += card.enemy_count
-	print("NUMBER ENEMIES: ", num_enemies)
 #endregion
 
 #region Entity movement
@@ -333,7 +331,6 @@ func load_next_level():
 
 	# TODO: Real card selection logic
 	select_cards = player_floor % 1 == 0
-	print("SELECT CARDS: ", select_cards)
 
 	if select_cards:
 		cards_canvas.visible = true
@@ -349,7 +346,6 @@ func load_next_level():
 		await hide_transition(1)
 
 		var card_modifier: CardModifier = await cards.selected
-		print("Card selected: ", card_modifier.modifiers)
 		# Only need to send Array[StatModifiers] bc duration is set above
 		# Player updates stats by connecting to this signal
 		EventManager.emit_signal("card_selected", card_modifier)
