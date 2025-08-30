@@ -52,7 +52,10 @@ const PHRASES = [
 	"Eggscuse me",
 	"Batter up",
 	"There's a lot at steak here",
-	"Lettuce play a game"
+	"Lettuce play a game",
+	"Anyone can cook!",
+	"One can get too familiar with vegetables, you know",
+	"The soup! Where is the soup?"
 ]
 
 func _ready() -> void:
