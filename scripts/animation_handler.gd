@@ -26,6 +26,3 @@ func face_direction(dir: Vector2) -> void:
 	print(direction)
 	play(_get_direction(dir))
 	print()
-	
-func die() -> void:
-	play("die")

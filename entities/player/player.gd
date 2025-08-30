@@ -30,4 +30,6 @@ func _on_player_stat_modified(_statmod: StatModifier):
 	
 func face_direction(dir: Vector2) -> void:
 	sprite.face_direction(dir)
-	pass
+	
+func die() -> void:
+	sprite.play("die")

@@ -239,6 +239,9 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
+	if player_floor % 5 == 4: # Every 5 rounds, skipping the first
+		EnemySpawner.update_weights()
+
 	var width = 6 + (player_floor / 2)
 	var height = 6 + (player_floor / 2)
 	
@@ -250,6 +253,8 @@ func setup_world():
 		width,
 		height,
 	)
+	
+	
 
 	# THIS SHOULD STAY HERE
 	# OTHERWISE _create_and_place_entities WILL OPERATE ON AN
@@ -276,8 +281,8 @@ func _create_and_place_chests() -> void:
 		map.occupy(c.position, c)
 
 func _create_and_place_enemies() -> void:
-	var enemy_list: Array = [basic_enemy_scene]
-	var spawn_weights: Array[float] = [1.0]
+	#var enemy_list: Array = [basic_enemy_scene]
+	#var spawn_weights: Array[float] = [1.0]
 	for cell in map.enemies:
 		var picked_enemy = EnemySpawner.pick_object()
 		var e = picked_enemy.instantiate() as Enemy

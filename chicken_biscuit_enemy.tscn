@@ -91,18 +91,18 @@ animations = [{
 }],
 "loop": true,
 "name": &"face_up",
-"speed": 5.0
+"speed": 2.0
 }]
 
-[node name="ChickenBiscuitEnemy" type="Node2D"]
+[node name="ChickenBiscuitEnemy" type="Node2D" groups=["enemy", "entity"]]
 script = ExtResource("1_ct0gh")
 stats = SubResource("Resource_aniqq")
-
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
-rect = Rect2(0, 0, 10, 10)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ct0gh")
 animation = &"face_up"
 centered = false
 script = ExtResource("5_vgfhp")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(0, 0, 10, 10)
