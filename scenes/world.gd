@@ -9,6 +9,7 @@ const ENTITY_GROUP = "entity"
 const ENTITY_ACTION_DELAY = 0.1
 
 @export var chest_items: Array[Item]
+@export var player_floor: int = 1
 #@export var modifiers: Array[StatModifier]
 
 static var DEFAULT_ITEM = load("res://items/basic_potion.tres")
@@ -27,7 +28,6 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 var tile_size = 10
 var paused: bool = false
 var player_dead: bool = false
-var player_floor: int = 30
 var select_cards: bool = false
 var can_restart: bool = false
 
