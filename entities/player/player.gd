@@ -4,7 +4,7 @@ extends Entity
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var tempStatManager : TempStatManager = $StatManager
 
-var _last_facing_direction: String = "face_right"
+var _facing_right: bool = true
 
 func _ready() -> void:
 	super._ready()
@@ -34,16 +34,21 @@ func _get_direction(dir: Vector2) -> String:
 	if dir.y < 0: # Up decreases Y
 		return "face_up"
 	
-	# If dir.x == 0: don't change current facing direction
-	if dir.x < 0:
-		return "face_left"
+	# Set direction to right
 	if dir.x > 0:
+		_facing_right = true
 		return "face_right"
-	
-	return _last_facing_direction
+	elif dir.x < 0:
+		_facing_right = false
+		return "face_left"
+	# Do not override last direction when moving down
+	elif _facing_right:
+		return "face_right"
+	else:
+		return "face_left"
+
 	
 func face_direction(dir: Vector2) -> void:
-	var current_direction: String = _get_direction(dir)
 	sprite.play(_get_direction(dir))
 	
 func die() -> void:
