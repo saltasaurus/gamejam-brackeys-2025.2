@@ -1,0 +1,45 @@
+[gd_scene load_steps=10 format=3 uid="uid://bh3rguawotitm"]
+
+[ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="1_ct0gh"]
+[ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="2_5we4l"]
+[ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="3_vgfhp"]
+
+[sub_resource type="Resource" id="Resource_txldy"]
+script = ExtResource("2_5we4l")
+baseValue = 2
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_gw1qq"]
+script = ExtResource("2_5we4l")
+baseValue = 5
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_j5jyl"]
+script = ExtResource("2_5we4l")
+baseValue = 1
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_utexf"]
+script = ExtResource("2_5we4l")
+baseValue = 2
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_aniqq"]
+script = ExtResource("3_vgfhp")
+health = SubResource("Resource_gw1qq")
+strength = SubResource("Resource_utexf")
+defense = SubResource("Resource_txldy")
+speed = SubResource("Resource_j5jyl")
+metadata/_custom_type_script = "uid://cdont5dqir2xk"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ct0gh"]
+
+[node name="ChickenBiscuitEnemy" type="Node2D"]
+script = ExtResource("1_ct0gh")
+stats = SubResource("Resource_aniqq")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(0, 0, 10, 10)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ct0gh")

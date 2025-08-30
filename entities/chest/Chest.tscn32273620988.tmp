@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://tn2gj6kaix4u"]
+
+[ext_resource type="Texture2D" uid="uid://c5qsfsw2ddnxb" path="res://assets/chest_closed.png" id="1_5lva3"]
+[ext_resource type="Script" uid="uid://bmtghjj11rk7a" path="res://entities/chest/chest.gd" id="1_rogmm"]
+[ext_resource type="Texture2D" uid="uid://dsns7suyutkhu" path="res://assets/chest_open.png" id="2_vtdm8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rogmm"]
+atlas = ExtResource("1_5lva3")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vtdm8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rogmm")
+}],
+"loop": true,
+"name": &"closed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vtdm8")
+}],
+"loop": true,
+"name": &"opened",
+"speed": 5.0
+}]
+
+[node name="Chest" type="Node2D" groups=["entity"]]
+script = ExtResource("1_rogmm")
+chest_open = ExtResource("2_vtdm8")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_vtdm8")
+animation = &"closed"
+centered = false
+
+[node name="ItemSprite" type="Sprite2D" parent="."]
+centered = false
