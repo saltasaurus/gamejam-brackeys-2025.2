@@ -2,8 +2,10 @@
 
 [Game Jam Homepage](https://itch.io/jam/brackeys-14)
 
+## Assets
+[Song1](https://www.beepbox.co/#9n31s0k0l00e0ot38a7g0vj0fr0i0o535T0v3u00f0qg01d22w2h6E0T0v3u00f0q0w10r5d53w2h0E3b80a08T0v1u00f0qo013d41w2h0E1a0T2v1u15f10w4qw02d03w0E0b0003EepalaewVBIewVCKu0000008gx248gx248gx248gx248g000000008gx000000000000000000000000x2400000000000000000000p25kIR-M9y-Ci-CkR-2CRYaCLYilddldpv7jfA5ZczjjtjjqPfYDvellljj8QQB_tmSQQSYrPldldkBAZMjSAZNfufh0zQggZ60Y8gZ4Afhifh0zQkzQl3QozNC4Y2jMhf0zQkzQl3QpvwwoCwMmnunnBTBRVtVtusMo30VtVtununnBTBRYUMm5YzBTBRVtVtununnD5-5QzBnBRVlVtununnj-z_B3hfIOR6H9HaGOqOGICIiAshoIGH9HaGOXPqICIW_AuM61MaY1wICxYLcEvdPCQv4IGxYLdEvaOW7ParQvEFDV3Ql3QkzQkzQkzQkzQkzQkzQ001juz-000000)
+
 ## References
 
-[Map Generation](https://gameidea.org/2025/01/20/procedural-cave-generation-in-godot-2d/)  
 [Character Stat Sytem](https://minoqi.vercel.app/posts/godot-4-tutorials/stat-system-godot-4-tutorial/)  
 [Level Transition Shader](https://godotshaders.com/shader/pixelated-diamond-directional-fading-transition/)

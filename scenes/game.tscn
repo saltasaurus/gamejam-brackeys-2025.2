@@ -138,12 +138,6 @@ horizontal_alignment = 1
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Label2" type="Label" parent="World/CardsCanvas/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("12_trtic")
-text = "[SPACE / X]"
-horizontal_alignment = 1
-
 [node name="DeathCanvas" type="CanvasLayer" parent="World"]
 visible = false
 

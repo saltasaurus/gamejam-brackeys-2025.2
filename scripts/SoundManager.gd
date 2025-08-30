@@ -2,7 +2,7 @@ extends Node
 
 var audio_players: Array[AudioStreamPlayer2D]
 
-# var music = preload("res://music/music-2.wav")
+var music = preload("res://assets/music/song1.wav")
 
 var music_player: AudioStreamPlayer
 
@@ -13,19 +13,17 @@ func _ready() -> void:
 		audio_players.push_back(a)
 		a.finished.connect(on_sound_finished(a))
 
-	# music_player = AudioStreamPlayer.new()
-	# add_child(music_player)
-	# music_player.stream = music
-	# music_player.volume_db = -5
-	# music_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	music_player = AudioStreamPlayer.new()
+	add_child(music_player)
+	music_player.stream = music
+	music_player.volume_db = -5
+	music_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	music_player.play()
 
-	# if not mute_music:
-	# 	music_player.play()
-
-	# music_player.finished.connect(
-	# 	func():
-	# 		music_player.play()
-	# )
+	music_player.finished.connect(
+		func():
+			music_player.play()
+	)
 
 func play(sound: AudioStream, pos: Vector2, volume: float = 0) -> void:
 	if audio_players.size() == 0:
