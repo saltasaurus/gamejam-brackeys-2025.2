@@ -29,10 +29,10 @@ var player_floor: int = 1
 var select_cards: bool = false
 
 #region Difficulty variables
-var num_chests = 1
-var num_enemies = 2:
+var num_chests = 0
+var num_enemies = 0:
 	set(new_value):
-		num_enemies = max(1, num_enemies + new_value)
+		num_enemies = max(1, new_value)
 var enemy_bonus_stats_count = 5
 #endregion
 
@@ -204,14 +204,14 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
-	num_enemies = (player_floor / 3) + 1
-	num_chests = (player_floor / 10) + 1
 	var width = 8 + (player_floor / 2)
 	var height = 8 + (player_floor / 2)
-
+	
+	var total_enemies: int = num_enemies + (player_floor / 3) + 1
+	var total_chests: int = num_chests + (player_floor / 10) + 1
 	map.generate(
-		num_chests,
-		num_enemies,
+		total_chests,
+		total_enemies,
 		width,
 		height,
 	)
@@ -272,7 +272,7 @@ func create_card() -> CardModifier:
 	var duration = 0
 	var card = CardModifier.new()
 	card.duration_floors = duration
-	card.enemy_count = 3
+	card.enemy_count = 1
 	
 	for i in range(1):
 		var card_stats = create_card_stats(duration)
