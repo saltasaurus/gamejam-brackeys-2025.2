@@ -1,8 +1,8 @@
 class_name LevelStatModifier
 
 enum Type {
-    # Simple (for example +3, 2x)
-    BASIC,
+	# Simple (for example +3, 2x)
+	BASIC,
 }
 
 var type: Type
@@ -13,9 +13,9 @@ var basic_modifier: StatModifier
 
 # Apply modifier to character stats
 func apply(stats: CharacterStats):
-    match type:
-        Type.BASIC:
-            apply_basic(stats)
+	match type:
+		Type.BASIC:
+			apply_basic(stats)
 
 func apply_basic(stats: CharacterStats):
-    stats.
+	stats.update_stat(basic_modifier, null)

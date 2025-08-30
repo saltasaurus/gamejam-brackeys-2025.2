@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bla03ii3vqtkc"
-path="res://.godot/imported/biscuit_wall_floor.png-94e66d2fe3a7d2ccbc439957bf44b71f.ctex"
+path="res://.godot/imported/biscuit_wall_floor.png-ade472fb6d528bbbd573d78367ac9703.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/biscuit_wall_floor.png"
-dest_files=["res://.godot/imported/biscuit_wall_floor.png-94e66d2fe3a7d2ccbc439957bf44b71f.ctex"]
+source_file="res://assets/tiles/biscuit_wall_floor.png"
+dest_files=["res://.godot/imported/biscuit_wall_floor.png-ade472fb6d528bbbd573d78367ac9703.ctex"]
 
 [params]
 

@@ -1,4 +1,5 @@
 class_name StatModifier
+extends Resource
 
 #region Variables
 enum Type {
@@ -12,10 +13,10 @@ enum Type {
 	PERCENT_DIVIDE
 }
 
-var target: CharacterStats.Type
-var value : int = 0
-var type : Type
-var duration : float = 0 : set = set_duration
+@export var target: CharacterStats.Type
+@export var value : int = 0
+@export var type : Type
+@export var duration : float = 0 : set = set_duration
 #endregion
 
 #region Signals
@@ -31,7 +32,8 @@ func set_duration(_newDuration : float) -> void:
 		duration = _newDuration
 #endregion
 
-func initialize(_value : int, _modifierType : Type, _duration : float = 0) -> void:
+func initialize(_value : int, _modifierType : Type, _target: CharacterStats.Type, _duration : float = 0) -> void:
 	value = _value
 	type = _modifierType
+	target = _target
 	duration = _duration

@@ -1,9 +1,15 @@
 class_name World
 extends SubViewport
 
+#region Variables
+
 const ENEMY_GROUP = "enemy"
 const ENTITY_GROUP = "entity"
 
+@export var chest_items: Array[Item]
+@export var modifiers: Array[StatModifier]
+
+static var DEFAULT_ITEM = load("res://items/basic_potion.tres")
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
 static var chest_scene = preload("res://entities/chest/Chest.tscn")
 static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.tscn")
@@ -12,59 +18,87 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 @onready var map: Map = $ProcMap
 @onready var cards = $CardsCanvas/Cards
 @onready var cards_canvas = $CardsCanvas
+@onready var death_canvas = $DeathCanvas
 @onready var camera = $Camera
+@onready var transition: ColorRect = $EffectsCanvas/Transition
 
 var tile_size = 10
 var paused: bool = false
+var player_dead: bool = false
 var player_floor: int = 1
 var select_cards: bool = false
 
+#region Difficulty variables
+var num_chests = 1
+var num_enemies = 2
+var enemy_bonus_stats_count = 5
+#endregion
+
 var camera_follow_enabled: bool = true
+#endregion
 
 func _ready() -> void:
 	setup_world()
 	cards_canvas.visible = false
 	gui_disable_input = false
 	player.health_updated.connect(_on_player_health_updated)
-
 	EventManager.entity_died.connect(_on_entity_died)
-
-func _on_player_health_updated(health: int):
-	EventManager.player_health_updated.emit(health)
-
-func _on_entity_died(e: Entity):
-	map.vacate(e.position)
-	e.queue_free()
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
 	
 func _unhandled_input(event):
-	if paused:
+	if player_dead:
+		if event.is_action_pressed("ui_accept"):
+			_restart()
+		return
+
+	if paused or player_dead:
 		return
 
 	paused = true
+	var _update_world = false
 	if event.is_action_pressed("move_left"):
-		await move_player(Vector2.LEFT)
+		_update_world = await move_player(Vector2.LEFT)
 	elif event.is_action_pressed("move_right"):
-		await move_player(Vector2.RIGHT)
+		_update_world = await move_player(Vector2.RIGHT)
 	elif event.is_action_pressed("move_up"):
-		await move_player(Vector2.UP)
+		_update_world = await move_player(Vector2.UP)
 	elif event.is_action_pressed("move_down"):
-		await move_player(Vector2.DOWN)
-	paused = false
+		_update_world = await move_player(Vector2.DOWN)
 
-func on_chest_opened(item: Item):
-	if item is HealthItem:
-		player.heal(item.heal_amount)
+	if _update_world:
+		await update_world()
+	paused = false
 
 func _process(_delta: float) -> void:
 	if camera_follow_enabled:
 		camera.position = player.position
+		
+#region Signals
+func _on_player_health_updated(health: int):
+	# Is this circular?
+	EventManager.player_health_updated.emit(health)
 
-func move_player(dir):
+func _on_entity_died(e: Entity):
+	if e is Player:
+		_on_player_died()
+	else:
+		map.vacate(e.position)
+		e.queue_free()
+	
+func on_chest_opened(item: Item):
+	if item is HealthItem:
+		player.heal(item.heal_amount)
+	EventManager.emit_signal("player_stat_modified", item)
+	print("SENT ITEM DATA")
+#endregion
+
+#region Entity movement
+func move_player(dir) -> bool:
 	var entity = get_adjacent_entity(player.position, dir)
 	var _update_world = false
+	player.face_direction(dir) # Want to face direction for walking AND attacking
 	if entity != null:
 		if entity is Enemy:
 			camera_follow_enabled = false
@@ -76,15 +110,33 @@ func move_player(dir):
 			_update_world = true
 	elif await move_entity(player, dir):
 		if on_stairs(player):
-			load_next_level()
+			await load_next_level()
 		else:
 			_update_world = true
 
-	if _update_world:
-		paused = true
-		await update_world()
-		paused = false
+	return _update_world
+	
+func move_entity(entity: Entity, dir: Vector2) -> bool:
+	var movement: Vector2 = dir * tile_size
+	var next_position = entity.position + movement
+	
+	if map.is_walkable(map.local_to_map(next_position)):
+		map.vacate(entity.position)
+		map.occupy(next_position, entity)
 
+		if entity.on_screen.is_on_screen():
+			var tween = get_tree().create_tween()
+			tween.tween_property(entity, "position", next_position, 0.05)
+			await tween.finished
+		else:
+			entity.position = next_position
+
+		return true
+
+	return false
+#endregion
+
+#region Map queries
 func pathfind(start_world_pos: Vector2, goal_world_pos: Vector2) -> PackedVector2Array:
 	var start_id = map.pathfinding.get_closest_point(map.local_to_map(start_world_pos))
 	var goal_id = map.pathfinding.get_closest_point(map.local_to_map(goal_world_pos))
@@ -108,27 +160,9 @@ func get_adjacent_player_dir(pos: Vector2) -> Vector2:
 			return dir
 	return Vector2.ZERO
 
-func move_entity(entity: Entity, dir: Vector2) -> bool:
-	var movement: Vector2 = dir * tile_size
-	var next_position = entity.position + movement
-	
-	if map.is_walkable(map.local_to_map(next_position)):
-		map.vacate(entity.position)
-		map.occupy(next_position, entity)
-
-		if entity.on_screen.is_on_screen():
-			var tween = get_tree().create_tween()
-			tween.tween_property(entity, "position", next_position, 0.05)
-			await tween.finished
-		else:
-			entity.position = next_position
-
-		return true
-
-	return false
-
 func on_stairs(e: Node2D) -> bool:
 	return map.is_stairs(map.local_to_map(e.position))
+#endregion
 
 func update_world():
 	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
@@ -155,7 +189,6 @@ func update_world():
 					await attack_melee(enemy, target_entity, action.attack_dir)
 
 func setup_world():
-	# Hacky way to clear world between levels
 	for e in get_children():
 		if e is Chest:
 			e.free()
@@ -174,31 +207,70 @@ func setup_world():
 		height,
 	)
 
+	# THIS SHOULD STAY HERE
+	# OTHERWISE _create_and_place_entities WILL OPERATE ON AN
+	# OLD VERSION OF THE PLAYER POSITION
+	player.position = map.start_point * tile_size
+	camera.position = player.position
+
+	_create_and_place_chests()
+	_create_and_place_enemies()
+	_create_and_place_entities()
+
+
+func _create_and_place_chests() -> void:
 	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
 		# TODO: Random item
-		c.item = load("res://items/basic_potion.tres")
+		var item: Item = chest_items.pick_random()
+		if item == null:
+			item = DEFAULT_ITEM
+		c.item = item
 		c.position = cell * tile_size
 		add_child(c)
 		c.opened.connect(on_chest_opened)
 		map.occupy(c.position, c)
 
+func _create_and_place_enemies() -> void:
 	for cell in map.enemies:
 		var e = basic_enemy_scene.instantiate() as Enemy
+		e.stats = _get_enemy_stats(e.stats)
 		e.position = cell * tile_size
 		add_child(e)
 		map.occupy(e.position, e)
+		
+func _get_enemy_stats(current_stats: CharacterStats) -> CharacterStats:
+	# For each bonus stat count, create a random stat modification
+	for i in range(enemy_bonus_stats_count):
+		var stat_mod = StatModifier.new() 
+		var random_char_stat = randi_range(0, len(CharacterStats.Type) - 1)
+		stat_mod.initialize(1, StatModifier.Type.ADD, random_char_stat)
 
-	player.position = map.start_point * tile_size
-	camera.position = player.position
+	return current_stats
 
+func _create_and_place_entities() -> void:
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
-		map.occupy(e.position, e)
 		_snap_entity_pos(e)
+		map.occupy(e.position, e)
+
+func create_card_stats(duration: int) -> StatModifier:
+	var s1 = StatModifier.new()
+	s1.initialize(randi_range(1, 5), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH, duration)
+	return s1
+
+func create_card() -> CardModifier:
+	var duration = randi_range(1, 3)
+	var card = CardModifier.new()
+	card.duration_floors = duration
+	
+	for i in range(1):
+		var card_stats = create_card_stats(duration)
+		card.modifiers.push_back(card_stats)
+	
+	return card
 
 func load_next_level():
 	paused = true
-	var transition: ColorRect = $EffectsCanvas/Transition
 
 	await wait_for_transition(transition, 1, 1)
 
@@ -207,26 +279,12 @@ func load_next_level():
 
 	if select_cards:
 		cards_canvas.visible = true
-
-		# TODO: Generate real cards
-		var duration = randi_range(1, 3)
-
-		var s1 = StatModifier.new()
-		s1.type = StatModifier.Type.ADD
-		s1.duration = duration
-		s1.target = CharacterStats.Type.STRENGTH
-		s1.value = randi_range(1, 5)
-		
-		var m1 = CardModifier.new()
-		m1.duration_floors = duration
-		m1.modifiers.push_back(s1)
-		#m1.modifiers.push_back(s1)
-
+	
 		var modifiers: Array[CardModifier] = []
-		modifiers.push_back(m1)
-		modifiers.push_back(m1)
-		modifiers.push_back(m1)
-
+		for i in range(3):
+			var cardmod = create_card()
+			modifiers.push_back(cardmod)
+			
 		cards.show_cards(modifiers)
 
 		await wait_for_transition(transition, -1, 1)
@@ -264,3 +322,16 @@ func spawn_damage_indicator(val: int, pos: Vector2):
 	s.position = pos
 	s.text = str(val)
 	add_child(s)
+
+func _on_player_died():
+	paused = true
+	player.die()
+	player_dead = true
+	await get_tree().create_timer(0.5).timeout
+	await wait_for_transition(transition, 1, 1)
+	death_canvas.visible = true
+	await wait_for_transition(transition, -1, 1)
+
+func _restart():
+	print("Restarting")
+	get_tree().change_scene_to_file("res://scenes/game.tscn")
