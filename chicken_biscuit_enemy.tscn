@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bh3rguawotitm"]
+[gd_scene load_steps=17 format=3 uid="uid://bh3rguawotitm"]
 
 [ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="1_ct0gh"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="2_5we4l"]
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="3_vgfhp"]
+[ext_resource type="Texture2D" uid="uid://ciiasmyertuk7" path="res://assets/characters/chicken_biscuit_anim.png" id="4_5we4l"]
 
 [sub_resource type="Resource" id="Resource_txldy"]
 script = ExtResource("2_5we4l")
@@ -32,7 +33,65 @@ defense = SubResource("Resource_txldy")
 speed = SubResource("Resource_j5jyl")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_vgfhp"]
+atlas = ExtResource("4_5we4l")
+region = Rect2(0, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3fmg"]
+atlas = ExtResource("4_5we4l")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_txldy"]
+atlas = ExtResource("4_5we4l")
+region = Rect2(20, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gw1qq"]
+atlas = ExtResource("4_5we4l")
+region = Rect2(20, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j5jyl"]
+atlas = ExtResource("4_5we4l")
+region = Rect2(10, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_utexf"]
+atlas = ExtResource("4_5we4l")
+region = Rect2(10, 0, 10, 10)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_ct0gh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vgfhp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y3fmg")
+}],
+"loop": true,
+"name": &"face_left",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_txldy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gw1qq")
+}],
+"loop": true,
+"name": &"face_right",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j5jyl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_utexf")
+}],
+"loop": true,
+"name": &"face_up",
+"speed": 5.0
+}]
 
 [node name="ChickenBiscuitEnemy" type="Node2D"]
 script = ExtResource("1_ct0gh")
@@ -43,3 +102,4 @@ rect = Rect2(0, 0, 10, 10)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ct0gh")
+animation = &"face_up"
