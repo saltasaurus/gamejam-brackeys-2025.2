@@ -55,7 +55,15 @@ const PHRASES = [
 	"Lettuce play a game",
 	"Anyone can cook!",
 	"One can get too familiar with vegetables, you know",
-	"The soup! Where is the soup?"
+	"The soup! Where is the soup?",
+	"Don't get whisked away",
+	"Oh honey",
+	"You are cooking",
+	"Working hard or hardly working",
+	"An apple a day",
+	"You're toast out there",
+	"Both the bread and le pain",
+	"Creme de la creme"
 ]
 
 func _ready() -> void:
