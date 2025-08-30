@@ -1,7 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=30 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
-[ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
+[ext_resource type="PackedScene" path="res://scenes/ui.tscn" id="2_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://iu2i20icpjiu" path="res://entities/player/player.tscn" id="2_p57ef"]
 [ext_resource type="Script" uid="uid://bnhiujpo84owt" path="res://scenes/world.gd" id="2_u5sy4"]
 [ext_resource type="Script" uid="uid://b3d3152u4ku07" path="res://items/item.gd" id="4_rysoc"]
@@ -13,10 +13,13 @@
 [ext_resource type="Resource" uid="uid://crdwgyenf6lfd" path="res://items/weak_weapon.tres" id="6_trtic"]
 [ext_resource type="Resource" uid="uid://bble1xk1pva0a" path="res://items/shield_item_1.tres" id="7_ir15t"]
 [ext_resource type="Shader" uid="uid://cjygb6yl3te0b" path="res://shader/transition.gdshader" id="9_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://dpfmb1jollxg1" path="res://entities/basic_enemy/basic_enemy.tscn" id="9_1kice"]
+[ext_resource type="PackedScene" uid="uid://bh3rguawotitm" path="res://chicken_biscuit_enemy.tscn" id="10_5newe"]
 [ext_resource type="PackedScene" uid="uid://bhn6k1e3wei8k" path="res://scenes/level_transition.tscn" id="11_kvpfn"]
-[ext_resource type="Script" uid="uid://c4wbgsyj6h8wx" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
+[ext_resource type="Script" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="12_trtic"]
 [ext_resource type="Texture2D" uid="uid://cdtojg6wpebrl" path="res://assets/characters/chef_dead.png" id="15_rysoc"]
+[ext_resource type="Script" uid="uid://d40dnllvu155" path="res://weighted_random.gd" id="17_ssvqc"]
 
 [sub_resource type="Resource" id="Resource_dinhu"]
 script = ExtResource("5_vtaks")
@@ -76,6 +79,12 @@ size = Vector2i(80, 180)
 size = Vector2i(240, 180)
 script = ExtResource("2_u5sy4")
 chest_items = Array[ExtResource("4_rysoc")]([ExtResource("5_kvuet"), ExtResource("6_trtic"), ExtResource("7_ir15t")])
+
+[node name="EnemySpawner" type="Node" parent="World"]
+script = ExtResource("17_ssvqc")
+enemy_list = Array[PackedScene]([ExtResource("9_1kice"), ExtResource("10_5newe")])
+spawn_weights = Array[float]([1.0, 1.0])
+metadata/_custom_type_script = "uid://d40dnllvu155"
 
 [node name="BackgroundCanvas" type="CanvasLayer" parent="World"]
 layer = -1

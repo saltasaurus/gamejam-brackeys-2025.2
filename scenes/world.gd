@@ -25,6 +25,7 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 @onready var death_canvas = $DeathCanvas
 @onready var camera = $Camera
 @onready var transition: ColorRect = $EffectsCanvas/Transition
+@onready var EnemySpawner: WeightRandom = $EnemySpawner
 
 var tile_size = 10
 var paused: bool = false
@@ -73,6 +74,7 @@ func _ready() -> void:
 	player.health_updated.connect(_on_player_health_updated)
 	EventManager.entity_died.connect(_on_entity_died)
 	EventManager.card_selected.connect(_on_card_selected)
+	
 
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
@@ -260,6 +262,7 @@ func setup_world():
 	_create_and_place_entities()
 
 
+
 func _create_and_place_chests() -> void:
 	for cell in map.chests:
 		var c = chest_scene.instantiate() as Chest
@@ -273,8 +276,12 @@ func _create_and_place_chests() -> void:
 		map.occupy(c.position, c)
 
 func _create_and_place_enemies() -> void:
+	var enemy_list: Array = [basic_enemy_scene]
+	var spawn_weights: Array[float] = [1.0]
 	for cell in map.enemies:
-		var e = basic_enemy_scene.instantiate() as Enemy
+		var picked_enemy = EnemySpawner.pick_object()
+		var e = picked_enemy.instantiate() as Enemy
+		#var e = basic_enemy_scene.instantiate() as Enemy
 		e.stats = _get_enemy_stats(e.stats)
 		e.position = cell * tile_size
 		add_child(e)

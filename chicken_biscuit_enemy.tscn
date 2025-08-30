@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://bh3rguawotitm"]
+[gd_scene load_steps=18 format=3 uid="uid://bh3rguawotitm"]
 
 [ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="1_ct0gh"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="2_5we4l"]
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="3_vgfhp"]
 [ext_resource type="Texture2D" uid="uid://ciiasmyertuk7" path="res://assets/characters/chicken_biscuit_anim.png" id="4_5we4l"]
+[ext_resource type="Script" uid="uid://b1rg6rfkgunt8" path="res://scripts/animation_handler.gd" id="5_vgfhp"]
 
 [sub_resource type="Resource" id="Resource_txldy"]
 script = ExtResource("2_5we4l")
@@ -103,3 +104,5 @@ rect = Rect2(0, 0, 10, 10)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ct0gh")
 animation = &"face_up"
+centered = false
+script = ExtResource("5_vgfhp")
