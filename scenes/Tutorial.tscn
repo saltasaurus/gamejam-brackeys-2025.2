@@ -27,7 +27,7 @@ offset_top = 20.0
 offset_right = 360.0
 offset_bottom = 200.0
 theme = ExtResource("2_ebau5")
-text = "YOU'RE COOKED"
+text = "You're Cooked!"
 horizontal_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="SubViewport"]
