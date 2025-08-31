@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://1q023dc23fdf"]
+
+[ext_resource type="Texture2D" uid="uid://cdpxp0dh5pitw" path="res://assets/characters/basic_biscuit_anim.png" id="1_f5day"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ug7ah"]
+atlas = ExtResource("1_f5day")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7b2ar"]
+atlas = ExtResource("1_f5day")
+region = Rect2(0, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_27tx6"]
+atlas = ExtResource("1_f5day")
+region = Rect2(20, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b21vy"]
+atlas = ExtResource("1_f5day")
+region = Rect2(20, 10, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tp5fp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ug7ah")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7b2ar")
+}],
+"loop": true,
+"name": &"face_left",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_27tx6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b21vy")
+}],
+"loop": true,
+"name": &"face_right",
+"speed": 2.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"face_up",
+"speed": 2.0
+}]
+
+[node name="Biscuit" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_tp5fp")
+animation = &"face_right"
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(0, 0, 10, 10)
