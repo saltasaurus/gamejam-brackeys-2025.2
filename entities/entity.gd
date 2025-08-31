@@ -55,8 +55,8 @@ func take_damage(damage: int) -> void:
 	
 func heal(amount: int) -> void:
 	health += amount
-	if health >= stats.health.baseValue:
-		health = stats.health.baseValue
+	if health >= stats.health.adjustedValue:
+		health = stats.health.adjustedValue
 
 	health_updated.emit(health)
 
