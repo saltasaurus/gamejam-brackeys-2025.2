@@ -12,7 +12,6 @@ signal restart()
 
 @export var chest_items: Array[Item]
 @export var player_floor: int = 1
-#@export var modifiers: Array[StatModifier]
 
 static var DEFAULT_ITEM = load("res://items/basic_potion.tres")
 static var damage_indicator = preload("res://scenes/damage_indicator.tscn")
@@ -40,7 +39,7 @@ var num_chests = 0
 var num_enemies = 0:
 	set(new_value):
 		num_enemies = max(1, new_value)
-var enemy_bonus_stats_count = 5
+var enemy_bonus_stats_count = 0
 #endregion
 
 var camera_follow_enabled: bool = true
@@ -242,22 +241,26 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
-	# Add a new enemy type every 3 rounds, skipping the first
-	if player_floor % 3 == 2: 
+	# Add a new enemy type every 5 rounds, skipping the first
+	if (player_floor - 1) % 5 == 4: # player_floor is 1-indexed
 		_add_next_enemy()
+	
+	enemy_bonus_stats_count = 2 * (player_floor / 3) 
 
-	var width = 6 + (player_floor / 2)
-	var height = 6 + (player_floor / 2)
+	# Increases map size by 2 every 3 floors due to integer division
+	var width = 6 + 2 * (player_floor / 3)
+	var height = 6 + 2 * (player_floor / 3)
+	
 	
 	var total_enemies: int = num_enemies + (player_floor / 3) + 1
-	var total_chests: int = num_chests + (player_floor / 10) + 1
+	var total_chests: int = num_chests + (player_floor / 8) + 1
 	map.generate(
 		total_chests,
 		total_enemies,
 		width,
 		height,
 	)
-	
+
 	# THIS SHOULD STAY HERE
 	# OTHERWISE _create_and_place_entities WILL OPERATE ON AN
 	# OLD VERSION OF THE PLAYER POSITION
@@ -267,12 +270,6 @@ func setup_world():
 	_create_and_place_chests()
 	_create_and_place_enemies()
 	_create_and_place_entities()
-	
-	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
-	for enemy in enemies:
-		var en = enemy as Enemy
-		print("Health: ", en.health, " | Health adjusted ", en.stats.health.adjustedValue)
-		print("Defense: ", en.stats.defense.baseValue, " | Defense adjusted: ", en.stats.defense.adjustedValue)
 
 func _add_next_enemy() -> void:
 	EnemySpawner.add_enemy()
@@ -295,15 +292,16 @@ func _create_and_place_enemies() -> void:
 	for cell in map.enemies:
 		var picked_enemy = EnemySpawner.pick_object()
 		var e = picked_enemy.instantiate() as Enemy
-		#var e = basic_enemy_scene.instantiate() as Enemy
+		
+		e.position = cell * tile_size
+		add_child(e)
+		
+		# Update resources AFTER add_child(). Add child calls _ready()
 		var bonus_stats: Array[StatModifier] = _get_enemy_stats(e.stats)
 		for bonus_stat in bonus_stats:
 			e.update_stat(bonus_stat)
-		#e.stats.update_stats(bonus_stats)
-		print("Should be new health: ", e.stats.health.adjustedValue)
-		print("Should be new defense: ", e.stats.defense.adjustedValue)
-		e.position = cell * tile_size
-		add_child(e)
+		e.refresh_cached_stats() # Must refresh cached stat variables
+		
 		map.occupy(e.position, e)
 		
 func _get_enemy_stats(current_stats: CharacterStats) -> Array[StatModifier]:
@@ -314,7 +312,6 @@ func _get_enemy_stats(current_stats: CharacterStats) -> Array[StatModifier]:
 		var random_char_stat = randi_range(0, len(CharacterStats.Type) - 1)
 		stat_mod.initialize(1, StatModifier.Type.ADD, random_char_stat)
 		add_stats.append(stat_mod)
-	print("Adding ", len(add_stats), " stats to the enemy")
 
 	return add_stats
 
@@ -325,7 +322,7 @@ func _create_and_place_entities() -> void:
 
 func create_card1() -> CardModifier:
 	var card = CardModifier.new()
-	card.heal_amount = randi_range(2, 3)
+	card.heal_amount = randi_range(2, 4) + (player_floor / 5)
 	return card
 
 func create_card2() -> CardModifier:
@@ -340,7 +337,7 @@ func create_card2() -> CardModifier:
 	if player.stats.defense.adjustedValue > 0:
 		lose_stats.push_back(CharacterStats.Type.DEFENSE)
 
-	# var lose_stat = lose_stats.pick_random()
+	#var lose_stat = lose_stats.pick_random()
 	var lose_stat = CharacterStats.Type.HEALTH
 	var gain_stat = lose_stat
 	while gain_stat == lose_stat:
@@ -364,7 +361,7 @@ func create_card3() -> CardModifier:
 	for i in range(1):
 		var s1 = StatModifier.new()
 		var stat = CharacterStats.Type[CharacterStats.Type.keys().pick_random()]
-		s1.initialize(1, StatModifier.Type.ADD, stat)
+		s1.initialize(3, StatModifier.Type.ADD, stat)
 		card.modifiers.push_back(s1)
 
 	return card

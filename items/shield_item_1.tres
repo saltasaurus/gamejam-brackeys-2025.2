@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="StatItem" load_steps=3 format=3 uid="uid://bble1xk1pva0a"]
 
 [ext_resource type="Script" uid="uid://cw0vu353hkrdw" path="res://items/stat_item.gd" id="1_dmtfs"]
-[ext_resource type="Texture2D" uid="uid://c3br6fosuifw6" path="res://assets/ui/defense.png" id="2_po2e0"]
+[ext_resource type="Texture2D" uid="uid://bcwe7yrmnvjs" path="res://scenes/chef_hat_icon.png" id="2_po2e0"]
 
 [resource]
 script = ExtResource("1_dmtfs")

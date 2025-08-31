@@ -43,15 +43,13 @@ func pick_object() -> PackedScene:
 	if _current_enemies.is_empty():
 		push_error("Current enemies is empty!?")
 	
-	#var current_weights = generate_normal_weights(len(_current_enemies))
-	#var random_enemy: int = RNG.rand_weighted(current_weights)
 	return _current_enemies.pick_random()
 
 ## Add next iteration of enemies to spawnable pool
 func add_enemy() -> void:
-	print("Adding new enemies")
 	if _enemy_list.is_empty():
-		_enemy_list = enemy_list.duplicate()
-		_enemy_list.shuffle()
+		#_enemy_list = enemy_list.duplicate()
+		#_enemy_list.shuffle()
+		return
 	
 	_current_enemies.append(_enemy_list.pop_front())

@@ -1,7 +1,7 @@
 [gd_scene load_steps=31 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
-[ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://i53h5ua2qa1c" path="res://scenes/ui.tscn" id="2_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://iu2i20icpjiu" path="res://entities/player/player.tscn" id="2_p57ef"]
 [ext_resource type="Script" uid="uid://bnhiujpo84owt" path="res://scenes/world.gd" id="2_u5sy4"]
 [ext_resource type="Script" uid="uid://b3d3152u4ku07" path="res://items/item.gd" id="4_rysoc"]
@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://bh3rguawotitm" path="res://chicken_biscuit_enemy.tscn" id="10_5newe"]
 [ext_resource type="PackedScene" uid="uid://l5oikiixg512" path="res://grape_jelly_biscuit.tscn" id="11_5newe"]
 [ext_resource type="PackedScene" uid="uid://bhn6k1e3wei8k" path="res://scenes/level_transition.tscn" id="11_kvpfn"]
-[ext_resource type="Script" uid="uid://c4wbgsyj6h8wx" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
+[ext_resource type="Script" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="12_trtic"]
 [ext_resource type="Texture2D" uid="uid://cdtojg6wpebrl" path="res://assets/characters/chef_dead.png" id="15_rysoc"]
 [ext_resource type="Script" uid="uid://d40dnllvu155" path="res://weighted_random.gd" id="17_ssvqc"]

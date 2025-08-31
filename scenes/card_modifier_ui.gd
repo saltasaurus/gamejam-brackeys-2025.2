@@ -2,10 +2,17 @@ extends Control
 class_name CardModifierUI
 
 static var health_texture = preload("res://assets/ui/heart.png")
-static var strength_texture = preload("res://assets/ui/damage.png")
-static var defense_texture = preload("res://assets/ui/defense.png")
+#static var strength_texture = preload("res://assets/ui/damage.png")
+#static var defense_texture = preload("res://assets/ui/defense.png")
+#static var heal_texture = preload("res://assets/ui/heal.png")
+static var strength_texture = preload("res://assets/knife_icon.png")
+static var defense_texture = preload("res://assets/chef_hat_icon.png")
+static var heal_texture = preload("res://assets/lettuce.png")
+
 static var enemy_texture = preload("res://assets/ui/enemy.png")
-static var heal_texture = preload("res://assets/ui/heal.png")
+
+
+
 
 const GOOD_COLOR := Color("a8ca58")
 const BAD_COLOR := Color("cf573c")
