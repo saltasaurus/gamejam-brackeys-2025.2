@@ -371,7 +371,7 @@ func load_next_level():
 		]
 
 		cards.show_cards(modifiers)
-		level_transition_phrase.text = PHRASES.pick_random() + "..."
+		level_transition_phrase.text = PHRASES.pick_random()
 
 		await hide_transition(1)
 

@@ -63,6 +63,14 @@ offset_bottom = 110.0
 theme = ExtResource("2_ebau5")
 text = "SELECT/CONFIRM"
 
+[node name="Label4" type="Label" parent="SubViewport"]
+offset_left = 270.0
+offset_top = 160.0
+offset_right = 310.0
+offset_bottom = 183.0
+theme = ExtResource("2_ebau5")
+text = "> Start"
+
 [node name="Transition" type="ColorRect" parent="SubViewport"]
 material = ExtResource("6_twv1b")
 anchors_preset = 15
