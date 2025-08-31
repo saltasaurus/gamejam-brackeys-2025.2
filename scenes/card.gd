@@ -22,6 +22,11 @@ func _ready() -> void:
 		vbox.add_child(mod)
 		mod.set_enemy_count(modifier.enemy_count)
 
+	if modifier.heal_amount > 0:
+		var mod: CardModifierUI = (card_scene.instantiate() as CardModifierUI)
+		vbox.add_child(mod)
+		mod.set_heal_amount(modifier.heal_amount)
+
 func _process(_delta: float) -> void:
 	if has_focus():
 		top.position.y = focused_pos

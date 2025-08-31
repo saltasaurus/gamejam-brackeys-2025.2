@@ -62,3 +62,9 @@ func heal(amount: int) -> void:
 
 func is_alive() -> bool:
 	return health > 0
+
+func _update_stat(mod: StatModifier):
+	stats.update_stat(mod, null)
+	if health > stats.health.adjustedValue:
+		health = stats.health.adjustedValue
+	health_updated.emit(health)

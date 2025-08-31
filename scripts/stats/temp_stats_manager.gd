@@ -16,9 +16,7 @@ func _ready() -> void:
 	#printerr("ERROR: Tried to add a temp stat modifier to StatManager that was not a temp stat modifier")
 	#
 func _on_next_level(_level: int) -> void:
-	print("Next level")
 	var statsToRemove : Array[StatModifier] = []
-	print("tempStats: ", tempStats)
 	for tempStat in tempStats:
 		tempStat.duration -= 1
 		# Level update happens first, so remove after the current level
@@ -29,6 +27,5 @@ func _on_next_level(_level: int) -> void:
 			
 	for statToRemove in statsToRemove:
 		tempStats.erase(statToRemove)
-		print("-", statToRemove.value, " next floor")
 		
 	statsToRemove.clear()

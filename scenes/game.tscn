@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=30 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
@@ -31,11 +31,6 @@ script = ExtResource("5_vtaks")
 baseValue = 5
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
-[sub_resource type="Resource" id="Resource_trtic"]
-script = ExtResource("5_vtaks")
-baseValue = 0
-metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
-
 [sub_resource type="Resource" id="Resource_ir15t"]
 script = ExtResource("5_vtaks")
 baseValue = 1
@@ -46,7 +41,6 @@ script = ExtResource("6_kvpfn")
 health = SubResource("Resource_kvuet")
 strength = SubResource("Resource_ir15t")
 defense = SubResource("Resource_dinhu")
-speed = SubResource("Resource_trtic")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"
 
 [sub_resource type="Shader" id="Shader_5gavt"]

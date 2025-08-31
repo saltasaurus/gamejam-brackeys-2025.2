@@ -14,10 +14,10 @@ signal stat_adjusted(_stat : Stat)
 
 func _init() -> void:
 	adjustedValue = baseValue
+	statModifiers.clear()
 
 func add_stat_modifier(_newStatModifier : StatModifier) -> void:
 	statModifiers.append(_newStatModifier)
-	print("ADD STAT MODIFIER IN STATS")
 	_calculate_stat_modifiers()
 
 func add_temp_stat_modifier(_newTempStatModifier : StatModifier, _tempStatManager : TempStatManager) -> void:

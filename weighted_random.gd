@@ -18,11 +18,8 @@ func init_probabilities(_weights: Array[float]) -> void:
 		
 func pick_object() -> PackedScene:
 	var roll: float = randf_range(0.0, total)
-	print("ROLL: ", roll)
-	print("ACC WEIGHTS: ", acc_weights)
 	for i in range(len(acc_weights)):
 		if acc_weights[i] > roll:
-			print("CHOOSING ENEMY ", i)
 			return enemy_list[i]
 	return enemy_list[0]
 	
@@ -35,5 +32,4 @@ func update_weights() -> void:
 		return
 		
 	spawn_weights[0] += 0.1
-	print("NEW WEIGHTS: ", spawn_weights)
 	init_probabilities(spawn_weights)

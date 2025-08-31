@@ -21,8 +21,4 @@ func _get_direction(dir: Vector2) -> String:
 
 	
 func face_direction(dir: Vector2) -> void:
-	print("GIVEN DIRECTION: ", dir)
-	var direction = _get_direction(dir)
-	print(direction)
 	play(_get_direction(dir))
-	print()

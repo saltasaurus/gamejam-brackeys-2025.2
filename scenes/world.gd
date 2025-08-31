@@ -77,7 +77,6 @@ func _ready() -> void:
 	EventManager.entity_died.connect(_on_entity_died)
 	EventManager.card_selected.connect(_on_card_selected)
 	
-
 func _snap_entity_pos(e: Node2D) -> void:
 	e.position = e.position.snapped(Vector2.ONE * tile_size)
 	
@@ -131,9 +130,10 @@ func on_chest_opened(item: Item):
 	EventManager.emit_signal("player_stat_modified", item)
 	
 func _on_card_selected(card: CardModifier):
-	if card.enemy_count == null:
-		return
 	num_enemies += card.enemy_count
+
+	if card.heal_amount > 0:
+		player.heal(card.heal_amount)
 #endregion
 
 #region Entity movement
@@ -254,8 +254,6 @@ func setup_world():
 		height,
 	)
 	
-	
-
 	# THIS SHOULD STAY HERE
 	# OTHERWISE _create_and_place_entities WILL OPERATE ON AN
 	# OLD VERSION OF THE PLAYER POSITION
@@ -265,8 +263,6 @@ func setup_world():
 	_create_and_place_chests()
 	_create_and_place_enemies()
 	_create_and_place_entities()
-
-
 
 func _create_and_place_chests() -> void:
 	for cell in map.chests:
@@ -306,48 +302,74 @@ func _create_and_place_entities() -> void:
 		_snap_entity_pos(e)
 		map.occupy(e.position, e)
 
-func create_card_stats(duration: int) -> StatModifier:
-	var s1 = StatModifier.new()
-	s1.initialize(randi_range(1, 3), StatModifier.Type.ADD, CharacterStats.Type.STRENGTH)
-	return s1
-
-func create_card() -> CardModifier:
-	#var duration = randi_range(1, 3)
-	var duration = 0
+func create_card1() -> CardModifier:
 	var card = CardModifier.new()
-	card.duration_floors = duration
+	card.heal_amount = randi_range(2, 3)
+	return card
+
+func create_card2() -> CardModifier:
+	var card = CardModifier.new()
+	card.enemy_count = 0
+
+	var lose_stats: Array[CharacterStats.Type] = []
+	if player.stats.health.adjustedValue > 1:
+		lose_stats.push_back(CharacterStats.Type.HEALTH)
+	if player.stats.strength.adjustedValue > 0:
+		lose_stats.push_back(CharacterStats.Type.STRENGTH)
+	if player.stats.defense.adjustedValue > 0:
+		lose_stats.push_back(CharacterStats.Type.DEFENSE)
+
+	# var lose_stat = lose_stats.pick_random()
+	var lose_stat = CharacterStats.Type.HEALTH
+	var gain_stat = lose_stat
+	while gain_stat == lose_stat:
+		gain_stat = CharacterStats.Type[CharacterStats.Type.keys().pick_random()]
+
+	for i in range(1):
+		var s1 = StatModifier.new()
+		s1.initialize(2, StatModifier.Type.ADD, gain_stat)
+		card.modifiers.push_back(s1)
+
+		var s2 = StatModifier.new()
+		s2.initialize(1, StatModifier.Type.SUB, lose_stat)
+		card.modifiers.push_back(s2)
+
+	return card
+
+func create_card3() -> CardModifier:
+	var card = CardModifier.new()
 	card.enemy_count = 1
 	
 	for i in range(1):
-		var card_stats = create_card_stats(duration)
-		card.modifiers.push_back(card_stats)
-	
-	
-	return card
+		var s1 = StatModifier.new()
+		var stat = CharacterStats.Type[CharacterStats.Type.keys().pick_random()]
+		s1.initialize(1, StatModifier.Type.ADD, stat)
+		card.modifiers.push_back(s1)
 
+	return card
 
 func load_next_level():
 	paused = true
 
 	await show_transition(1)
 
-	# TODO: Real card selection logic
 	select_cards = player_floor % 1 == 0
-
 	if select_cards:
 		cards_canvas.visible = true
 	
-		var modifiers: Array[CardModifier] = []
-		for i in range(3):
-			var cardmod: CardModifier = create_card()
-			modifiers.push_back(cardmod)
-			
+		var modifiers: Array[CardModifier] = [
+			create_card1(),
+			create_card2(),
+			create_card3()
+		]
+
 		cards.show_cards(modifiers)
 		level_transition_phrase.text = PHRASES.pick_random() + "..."
 
 		await hide_transition(1)
 
 		var card_modifier: CardModifier = await cards.selected
+ 
 		# Only need to send Array[StatModifiers] bc duration is set above
 		# Player updates stats by connecting to this signal
 		EventManager.emit_signal("card_selected", card_modifier)
@@ -376,9 +398,12 @@ func wait_for_transition(final_val: Variant, duration: float) -> void:
 
 func attack_melee(source: Entity, target: Entity, dir: Vector2) -> void:
 	await source.play_melee_attack_anim(dir)
+
+	# Always do a minimum of 1 damage to prevent stalemate
 	var damage = source.stats.strength.adjustedValue - target.stats.defense.adjustedValue
-	if damage < 0:
-		damage = 0
+	if damage < 1:
+		damage = 1
+
 	target.take_damage(damage)
 	spawn_damage_indicator(damage, target.position + Vector2(4, -5))
 

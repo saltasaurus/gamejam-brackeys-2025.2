@@ -12,18 +12,16 @@ func _ready() -> void:
 	
 	# Tell world player is ready
 	EventManager.emit_signal("player_stats_updated", stats)
-	
+
 ## Updates player stats based on selected card and emits
 ## player_stats_updated signal
 func _on_card_selected(card: CardModifier) -> void:
-	
 	for stat_mod in card.modifiers:
-		stats.update_stat(stat_mod, null)
-	
+		_update_stat(stat_mod)
 	EventManager.emit_signal("player_stats_updated", stats)
 
-func _on_player_stat_modified(_statmod: StatModifier):
-	stats.update_stat(_statmod, null)
+func _on_player_stat_modified(stat_mod: StatModifier):
+	_update_stat(stat_mod)
 	EventManager.emit_signal("player_stats_updated", stats)
 	
 func face_direction(dir: Vector2) -> void:

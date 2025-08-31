@@ -194,7 +194,6 @@ func _place_random(num: int, source: Dictionary[Vector2i, bool]) -> Array[Vector
 	var res: Array[Vector2i] = []
 	for i in range(num):
 		if source.size() == 0:
-			printerr("No open cells left")
 			break 
 
 		var idx = randi_range(0, source.size() - 1)
