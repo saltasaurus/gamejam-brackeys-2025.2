@@ -24,6 +24,7 @@ static var basic_enemy_scene = preload("res://entities/basic_enemy/basic_enemy.t
 @onready var level_transition_phrase = $CardsCanvas/VBoxContainer/Phrase
 @onready var cards_canvas = $CardsCanvas
 @onready var death_canvas = $DeathCanvas
+@onready var death_label = $DeathCanvas/CenterContainer/VBoxContainer/DeathPhrase
 @onready var camera = $Camera
 @onready var transition: ColorRect = $EffectsCanvas/Transition
 @onready var EnemySpawner: WeightRandom = $EnemySpawner
@@ -68,6 +69,15 @@ const PHRASES = [
 	"Creme de la creme",
 	"It's a game jam",
 	"To catch a fish, so juicy sweeeeeet!"
+]
+
+const DEATH_PHRASES = [
+	"The heat got too intense!\nYou survived %d kitchen floors",
+	"Recipe for disaster!\nYou scrambled through %d kitchen floors",
+	"I'm sorry, it's now time for you\nto leave the kitchen (%d)",
+	"You will not be season %d's\nNext Iron Chef",
+	"Hand in your apron.\nKitchen %d is your last",
+	"The food got cold after\n%d kitchen floors"
 ]
 
 func _ready() -> void:
@@ -437,6 +447,8 @@ func _on_player_died():
 	player_dead = true
 	await get_tree().create_timer(0.5).timeout
 	await show_transition(1)
+	
+	death_label.text = DEATH_PHRASES.pick_random() % player_floor
 	death_canvas.visible = true
 	await hide_transition(1)
 	can_restart = true

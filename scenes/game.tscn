@@ -208,7 +208,7 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="World/DeathCanvas/CenterContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="World/DeathCanvas/CenterContainer/VBoxContainer"]
+[node name="DeathPhrase" type="Label" parent="World/DeathCanvas/CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("12_trtic")
 text = "YOU DIED"
