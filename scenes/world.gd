@@ -8,6 +8,8 @@ const ENTITY_GROUP = "entity"
 
 const ENTITY_ACTION_DELAY = 0.1
 
+signal restart()
+
 @export var chest_items: Array[Item]
 @export var player_floor: int = 1
 #@export var modifiers: Array[StatModifier]
@@ -398,4 +400,4 @@ func _on_player_died():
 
 func _restart():
 	print("Restarting")
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	restart.emit()

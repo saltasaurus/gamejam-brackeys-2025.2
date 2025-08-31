@@ -1,22 +1,18 @@
-class_name Game
 extends Node2D
 
-@onready var world = $World
-@onready var ui: UI = $UIViewport/UI
 @onready var frame_buffer := $FrameBuffer
+
 @onready var transition: ColorRect = $SubViewport/Transition
 
 const INTERNAL_RESOLUTION = Vector2i(320, 180)
 
 var game_scale = 1
 
+var transitioning_scenes := false
+
 func _ready() -> void:
 	_update_scale()
 	get_viewport().size_changed.connect( _update_scale)
-	frame_buffer.gui_input.connect(_on_frame_buffer_gui_input)
-	hide_transition(1)
-
-	world.restart.connect(_on_restart)
 
 func _update_scale():
 	var window_size = get_viewport().size
@@ -31,22 +27,14 @@ func _update_scale():
 	frame_buffer.size = new_size
 	frame_buffer.position = (window_size - new_size) / 2
 
-func _unhandled_input(event):
-	if event is InputEventMouse:
+func _unhandled_input(event: InputEvent) -> void:
+	if transitioning_scenes:
 		return
-	world.push_input(event)
 
-func _on_frame_buffer_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouse:
-		# Because we are rendering a viewport that is scaled up, we
-		# must transform mouse events from screen pos to viewport pos.
-		var local_pos = event.position / game_scale
-		var ev = event.duplicate()
-		ev.position = local_pos
-		ev.global_position = local_pos
-		world.push_input(ev)
-	else:
-		world.push_input(event)
+	if event.is_action_pressed("ui_accept"):
+		transitioning_scenes = true
+		await show_transition(1)
+		get_tree().change_scene_to_file("res://scenes/game.tscn")
 
 func show_transition(duration: float) -> void:
 	await wait_for_transition(1, duration)
@@ -58,7 +46,3 @@ func wait_for_transition(final_val: Variant, duration: float) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(transition, "material:shader_parameter/height", final_val, duration)
 	await tween.finished
-
-func _on_restart():
-	await show_transition(1)
-	get_tree().change_scene_to_file("res://scenes/game.tscn")

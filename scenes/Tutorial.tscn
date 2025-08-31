@@ -1,0 +1,77 @@
+[gd_scene load_steps=8 format=3 uid="uid://b27hwiwmeii1m"]
+
+[ext_resource type="Texture2D" uid="uid://c8uv81lt7350x" path="res://assets/ui/tutorial_arrow_keys.png" id="1_pgr2e"]
+[ext_resource type="Texture2D" uid="uid://p8mrsrho6xma" path="res://assets/characters/main-menu.png" id="2_288ch"]
+[ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="2_ebau5"]
+[ext_resource type="Texture2D" uid="uid://b62esf4uluia1" path="res://assets/ui/tutorial_action.png" id="3_288ch"]
+[ext_resource type="Script" uid="uid://55x6qwftxh4f" path="res://scenes/tutorial.gd" id="4_ebau5"]
+[ext_resource type="Material" uid="uid://lkqfpsrdqn7d" path="res://materials/transition.material" id="6_twv1b"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_pgr2e"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Tutorial" type="Node2D"]
+script = ExtResource("4_ebau5")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(320, 180)
+
+[node name="TextureRect2" type="TextureRect" parent="SubViewport"]
+offset_left = -30.0
+offset_right = 290.0
+offset_bottom = 180.0
+texture = ExtResource("2_288ch")
+
+[node name="Label" type="Label" parent="SubViewport"]
+offset_top = 20.0
+offset_right = 360.0
+offset_bottom = 200.0
+theme = ExtResource("2_ebau5")
+text = "YOU'RE COOKED"
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="SubViewport"]
+offset_left = 160.0
+offset_top = 50.0
+offset_right = 208.0
+offset_bottom = 82.0
+texture = ExtResource("1_pgr2e")
+stretch_mode = 2
+
+[node name="Label2" type="Label" parent="SubViewport"]
+offset_left = 230.0
+offset_top = 62.0
+offset_right = 254.0
+offset_bottom = 70.0
+theme = ExtResource("2_ebau5")
+text = "MOVE"
+
+[node name="TextureRect3" type="TextureRect" parent="SubViewport"]
+offset_left = 176.0
+offset_top = 98.0
+offset_right = 192.0
+offset_bottom = 114.0
+size_flags_vertical = 4
+texture = ExtResource("3_288ch")
+stretch_mode = 2
+
+[node name="Label3" type="Label" parent="SubViewport"]
+offset_left = 230.0
+offset_top = 102.0
+offset_right = 310.0
+offset_bottom = 110.0
+theme = ExtResource("2_ebau5")
+text = "SELECT/CONFIRM"
+
+[node name="Transition" type="ColorRect" parent="SubViewport"]
+material = ExtResource("6_twv1b")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FrameBuffer" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("ViewportTexture_pgr2e")
