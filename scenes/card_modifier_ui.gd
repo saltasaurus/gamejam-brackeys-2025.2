@@ -9,7 +9,8 @@ static var strength_texture = preload("res://assets/knife_icon.png")
 static var defense_texture = preload("res://assets/chef_hat_icon.png")
 static var heal_texture = preload("res://assets/lettuce.png")
 
-static var enemy_texture = preload("res://assets/ui/enemy.png")
+#static var enemy_texture = preload("res://assets/ui/enemy.png")
+static var enemy_texture = preload("res://assets/biscuit_icon.png")
 
 
 
