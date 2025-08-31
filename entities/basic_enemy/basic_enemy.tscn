@@ -1,8 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://dpfmb1jollxg1"]
+[gd_scene load_steps=18 format=3 uid="uid://dpfmb1jollxg1"]
 
 [ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="2_rwafm"]
-[ext_resource type="Texture2D" uid="uid://b6chvha1dtbng" path="res://assets/characters/plain_biscuit.png" id="2_vildc"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="3_ruxsg"]
+[ext_resource type="Texture2D" uid="uid://cdpxp0dh5pitw" path="res://assets/characters/basic_biscuit_anim.png" id="4_4qd2v"]
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="4_vildc"]
 [ext_resource type="Script" uid="uid://b1rg6rfkgunt8" path="res://scripts/animation_handler.gd" id="5_vildc"]
 
@@ -34,43 +34,64 @@ defense = SubResource("Resource_4qd2v")
 speed = SubResource("Resource_e4w74")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ruxsg"]
-atlas = ExtResource("2_vildc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_6if4x"]
+atlas = ExtResource("4_4qd2v")
 region = Rect2(0, 0, 10, 10)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_vildc"]
-atlas = ExtResource("2_vildc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_e4w74"]
+atlas = ExtResource("4_4qd2v")
+region = Rect2(0, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4n6jn"]
+atlas = ExtResource("4_4qd2v")
 region = Rect2(20, 0, 10, 10)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4qd2v"]
-atlas = ExtResource("2_vildc")
+[sub_resource type="AtlasTexture" id="AtlasTexture_m7qsk"]
+atlas = ExtResource("4_4qd2v")
+region = Rect2(20, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oblg6"]
+atlas = ExtResource("4_4qd2v")
 region = Rect2(10, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kpdbw"]
+atlas = ExtResource("4_4qd2v")
+region = Rect2(10, 10, 10, 10)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6if4x"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ruxsg")
+"texture": SubResource("AtlasTexture_6if4x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e4w74")
 }],
 "loop": true,
 "name": &"face_left",
-"speed": 5.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_vildc")
+"texture": SubResource("AtlasTexture_4n6jn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m7qsk")
 }],
 "loop": true,
 "name": &"face_right",
-"speed": 5.0
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4qd2v")
+"texture": SubResource("AtlasTexture_oblg6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kpdbw")
 }],
 "loop": true,
 "name": &"face_up",
-"speed": 5.0
+"speed": 2.0
 }]
 
 [node name="BasicEnemy" type="Node2D" groups=["enemy", "entity"]]
@@ -79,7 +100,7 @@ stats = SubResource("Resource_m7qsk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6if4x")
-animation = &"face_left"
+animation = &"face_up"
 centered = false
 script = ExtResource("5_vildc")
 

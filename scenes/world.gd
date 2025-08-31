@@ -61,15 +61,18 @@ const PHRASES = [
 	"The soup! Where is the soup?",
 	"Don't get whisked away",
 	"Oh honey",
-	"You are cooking",
+	"You're cooked",
 	"Working hard or hardly working",
 	"An apple a day",
 	"You're toast out there",
 	"Both the bread and le pain",
-	"Creme de la creme"
+	"Creme de la creme",
+	"It's a game jam",
+	"To catch a fish, so juicy sweeeeeet!"
 ]
 
 func _ready() -> void:
+	
 	setup_world()
 	cards_canvas.visible = false
 	gui_disable_input = false
@@ -113,8 +116,8 @@ func _process(_delta: float) -> void:
 		camera.position = player.position
 
 #region Signals
+## Emits signal when the world attempts to update player health
 func _on_player_health_updated(health: int):
-	# Is this circular?
 	EventManager.player_health_updated.emit(health)
 
 func _on_entity_died(e: Entity):
@@ -239,8 +242,9 @@ func setup_world():
 		elif e is Enemy:
 			e.free()
 
-	if player_floor % 5 == 4: # Every 5 rounds, skipping the first
-		EnemySpawner.update_weights()
+	# Add a new enemy type every 3 rounds, skipping the first
+	if player_floor % 3 == 2: 
+		_add_next_enemy()
 
 	var width = 6 + (player_floor / 2)
 	var height = 6 + (player_floor / 2)
@@ -263,6 +267,9 @@ func setup_world():
 	_create_and_place_chests()
 	_create_and_place_enemies()
 	_create_and_place_entities()
+
+func _add_next_enemy() -> void:
+	EnemySpawner.add_enemy()
 
 func _create_and_place_chests() -> void:
 	for cell in map.chests:

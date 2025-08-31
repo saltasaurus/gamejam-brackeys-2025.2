@@ -1,7 +1,7 @@
-[gd_scene load_steps=31 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=30 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
-[ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
+[ext_resource type="PackedScene" path="res://scenes/ui.tscn" id="2_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://iu2i20icpjiu" path="res://entities/player/player.tscn" id="2_p57ef"]
 [ext_resource type="Script" uid="uid://bnhiujpo84owt" path="res://scenes/world.gd" id="2_u5sy4"]
 [ext_resource type="Script" uid="uid://b3d3152u4ku07" path="res://items/item.gd" id="4_rysoc"]
@@ -12,15 +12,14 @@
 [ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="6_kvpfn"]
 [ext_resource type="Resource" uid="uid://crdwgyenf6lfd" path="res://items/weak_weapon.tres" id="6_trtic"]
 [ext_resource type="Resource" uid="uid://bble1xk1pva0a" path="res://items/shield_item_1.tres" id="7_ir15t"]
+[ext_resource type="Shader" uid="uid://cjygb6yl3te0b" path="res://shader/transition.gdshader" id="9_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://dpfmb1jollxg1" path="res://entities/basic_enemy/basic_enemy.tscn" id="9_1kice"]
 [ext_resource type="PackedScene" uid="uid://bh3rguawotitm" path="res://chicken_biscuit_enemy.tscn" id="10_5newe"]
-[ext_resource type="PackedScene" uid="uid://l5oikiixg512" path="res://grape_jelly_biscuit.tscn" id="11_5newe"]
 [ext_resource type="PackedScene" uid="uid://bhn6k1e3wei8k" path="res://scenes/level_transition.tscn" id="11_kvpfn"]
-[ext_resource type="Script" uid="uid://c4wbgsyj6h8wx" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
+[ext_resource type="Script" path="res://scenes/frame_buffer.gd" id="12_dinhu"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="12_trtic"]
 [ext_resource type="Texture2D" uid="uid://cdtojg6wpebrl" path="res://assets/characters/chef_dead.png" id="15_rysoc"]
 [ext_resource type="Script" uid="uid://d40dnllvu155" path="res://weighted_random.gd" id="17_ssvqc"]
-[ext_resource type="Material" uid="uid://lkqfpsrdqn7d" path="res://materials/transition.material" id="20_5newe"]
 
 [sub_resource type="Resource" id="Resource_dinhu"]
 script = ExtResource("5_vtaks")
@@ -30,6 +29,11 @@ metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 [sub_resource type="Resource" id="Resource_kvuet"]
 script = ExtResource("5_vtaks")
 baseValue = 5
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_trtic"]
+script = ExtResource("5_vtaks")
+baseValue = 0
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
 [sub_resource type="Resource" id="Resource_ir15t"]
@@ -42,55 +46,11 @@ script = ExtResource("6_kvpfn")
 health = SubResource("Resource_kvuet")
 strength = SubResource("Resource_ir15t")
 defense = SubResource("Resource_dinhu")
+speed = SubResource("Resource_trtic")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"
 
-[sub_resource type="Shader" id="Shader_5gavt"]
-code = "// Original : Shader By Zacksly - https://zacksly.itch.io/
-shader_type canvas_item;
-
-uniform float AspectRatio = 1.5;
-uniform float Diamonds = 10.0;
-const float _min = -1.0;
-const float _max = 1.0;
-uniform float pixel_size = 0.08;
-
-uniform float height = -1.0;
-uniform bool disable_pixel;
-
-// MODIFIED: Added color support
-uniform vec3 final_color : source_color = vec3(0.0);
-
-void fragment() {
-
-	vec3 uv_grid = fract(vec3(UV, 0.0) * vec3(AspectRatio * Diamonds, Diamonds, 0.0));
-	if(! disable_pixel)uv_grid = round(uv_grid / pixel_size) * pixel_size;
-	float grid = abs(uv_grid.x - 0.5) + abs(uv_grid.y - 0.5);
-	vec3 raw_cam_image = vec3(UV.y + height)*1.5;
-	vec3 grayscale;
-	{
-		float max1 = max(raw_cam_image.r, raw_cam_image.g);
-		float max2 = max(max1, raw_cam_image.b);
-		grayscale = vec3(max(max1, max2));
-	}
-	vec3 clamped;
-	if( disable_pixel)
-		clamped = clamp(grayscale, vec3(_min), vec3(_max));
-	else
-		clamped = round(clamp(grayscale, vec3(_min), vec3(_max))/0.1)*0.1;
-
-	bool black_dot_grid = grid > dot(vec3(1.0) - clamped, vec3(0.333333));
-
-	vec4 texture_uv = texture(TEXTURE,UV);
-	vec4 grid_result = black_dot_grid? texture_uv : vec4(0.0);
-
-	// MODIFIED: Added color support
-	COLOR.rgb = final_color;
-
-	COLOR.a = grid_result.a;
-}"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5newe"]
-shader = SubResource("Shader_5gavt")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtaks"]
+shader = ExtResource("9_0tnpc")
 shader_parameter/AspectRatio = 1.0
 shader_parameter/Diamonds = 18.0
 shader_parameter/pixel_size = 0.08
@@ -122,7 +82,7 @@ chest_items = Array[ExtResource("4_rysoc")]([ExtResource("5_kvuet"), ExtResource
 
 [node name="EnemySpawner" type="Node" parent="World"]
 script = ExtResource("17_ssvqc")
-enemy_list = Array[PackedScene]([ExtResource("9_1kice"), ExtResource("10_5newe"), ExtResource("11_5newe")])
+enemy_list = Array[PackedScene]([ExtResource("9_1kice"), ExtResource("10_5newe")])
 metadata/_custom_type_script = "uid://d40dnllvu155"
 
 [node name="BackgroundCanvas" type="CanvasLayer" parent="World"]
@@ -181,7 +141,6 @@ theme = ExtResource("12_trtic")
 text = "Pick your plate...
 "
 horizontal_alignment = 1
-autowrap_mode = 2
 
 [node name="Cards" parent="World/CardsCanvas/VBoxContainer" instance=ExtResource("11_kvpfn")]
 layout_mode = 2
@@ -232,7 +191,7 @@ horizontal_alignment = 1
 [node name="EffectsCanvas" type="CanvasLayer" parent="World"]
 
 [node name="Transition" type="ColorRect" parent="World/EffectsCanvas"]
-material = SubResource("ShaderMaterial_5newe")
+material = SubResource("ShaderMaterial_vtaks")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -257,14 +216,6 @@ offset_left = 240.0
 offset_right = 320.0
 offset_bottom = 180.0
 texture = SubResource("ViewportTexture_vtaks")
-
-[node name="Transition" type="ColorRect" parent="SubViewport"]
-material = ExtResource("20_5newe")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="FrameBuffer" type="TextureRect" parent="."]
 offset_right = 40.0
