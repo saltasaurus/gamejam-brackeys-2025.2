@@ -48,7 +48,7 @@ animations = [{
 "speed": 2.0
 }]
 
-[node name="Biscuit" type="Node2D"]
+[node name="Biscuit" type="Node2D" groups=["enemy", "entity"]]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_tp5fp")

@@ -1,0 +1,101 @@
+[gd_scene load_steps=17 format=3 uid="uid://dvlxckpjo1rx7"]
+
+[ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="1_fkkgx"]
+[ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="2_i7bsn"]
+[ext_resource type="Script" uid="uid://cdont5dqir2xk" path="res://scripts/stats/character_stats.gd" id="3_e7fdm"]
+[ext_resource type="Texture2D" uid="uid://1xa5ggrll1do" path="res://assets/characters/sausage_egg_biscuit_anim.png" id="4_4pfg7"]
+[ext_resource type="Script" uid="uid://b1rg6rfkgunt8" path="res://scripts/animation_handler.gd" id="5_ycjla"]
+
+[sub_resource type="Resource" id="Resource_5udho"]
+script = ExtResource("2_i7bsn")
+baseValue = 0
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_t7xum"]
+script = ExtResource("2_i7bsn")
+baseValue = 1
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_f2gca"]
+script = ExtResource("2_i7bsn")
+baseValue = 4
+metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
+
+[sub_resource type="Resource" id="Resource_v8qr7"]
+script = ExtResource("3_e7fdm")
+health = SubResource("Resource_t7xum")
+strength = SubResource("Resource_f2gca")
+defense = SubResource("Resource_5udho")
+metadata/_custom_type_script = "uid://cdont5dqir2xk"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u3w2p"]
+atlas = ExtResource("4_4pfg7")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xqwxn"]
+atlas = ExtResource("4_4pfg7")
+region = Rect2(0, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2k4dv"]
+atlas = ExtResource("4_4pfg7")
+region = Rect2(20, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tu1t"]
+atlas = ExtResource("4_4pfg7")
+region = Rect2(20, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lno8g"]
+atlas = ExtResource("4_4pfg7")
+region = Rect2(10, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bwlbf"]
+atlas = ExtResource("4_4pfg7")
+region = Rect2(10, 10, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kkded"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u3w2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xqwxn")
+}],
+"loop": true,
+"name": &"face_left",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2k4dv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0tu1t")
+}],
+"loop": true,
+"name": &"face_right",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lno8g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bwlbf")
+}],
+"loop": true,
+"name": &"face_up",
+"speed": 2.0
+}]
+
+[node name="SausageEggBiscuit" type="Node2D" groups=["enemy", "entity"]]
+script = ExtResource("1_fkkgx")
+stats = SubResource("Resource_v8qr7")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_kkded")
+animation = &"face_up"
+centered = false
+script = ExtResource("5_ycjla")

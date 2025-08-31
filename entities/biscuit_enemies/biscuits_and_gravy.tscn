@@ -88,13 +88,13 @@ animations = [{
 "speed": 2.0
 }]
 
-[node name="BiscuitsAndGravy" type="Node2D"]
+[node name="BiscuitsAndGravy" type="Node2D" groups=["enemy", "entity"]]
 script = ExtResource("1_c7pok")
 stats = SubResource("Resource_8ew1n")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ewxyv")
-animation = &"face_up"
+animation = &"face_left"
 centered = false
 script = ExtResource("5_vlmi3")
 
