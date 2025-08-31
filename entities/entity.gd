@@ -14,9 +14,11 @@ var health: int
 var hurt_sound: AudioStream = preload("res://assets/sounds/player_hurt.wav")
 
 func _ready() -> void:
+	stats = stats.duplicate(true)
 	stats._init()
 
 	health = stats.health.adjustedValue
+	print("HEALTH: ", health)
 
 	health_updated.emit.call_deferred(health)
 
@@ -25,6 +27,12 @@ func _ready() -> void:
 	add_child(on_screen)
 	
 	add_to_group("entity")
+	
+func refresh_cached_stats() -> void:
+	# QUICK FIX -> Must be called 
+	health = stats.health.adjustedValue
+
+	health_updated.emit.call_deferred(health)
 
 func play_melee_attack_anim(dir: Vector2) -> void:
 	var original_pos = position
@@ -36,6 +44,13 @@ func play_melee_attack_anim(dir: Vector2) -> void:
 	tween = get_tree().create_tween()
 	tween.tween_property(self, "position", original_pos, 0.05)
 	await tween.finished
+	
+func update_stat(_statmod: StatModifier) -> void:
+	stats.update_stat(_statmod, null)
+	if _statmod.target == CharacterStats.Type.HEALTH:
+		if health > stats.health.adjustedValue:
+			health = stats.health.adjustedValue
+			health_updated.emit(health)
 
 func take_damage(damage: int) -> void:
 	if damage <= 0:
@@ -48,7 +63,6 @@ func take_damage(damage: int) -> void:
 	SoundManager.play(hurt_sound, position)
 	
 	health_updated.emit(health)
-
 	if health == 0:
 		# Ded
 		EventManager.entity_died.emit(self)
@@ -65,6 +79,4 @@ func is_alive() -> bool:
 
 func _update_stat(mod: StatModifier):
 	stats.update_stat(mod, null)
-	if health > stats.health.adjustedValue:
-		health = stats.health.adjustedValue
-	health_updated.emit(health)
+	

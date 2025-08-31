@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://b27hwiwmeii1m"]
+[gd_scene load_steps=8 format=3 uid="uid://c4nbyrk1h8av6"]
 
 [ext_resource type="Texture2D" uid="uid://c8uv81lt7350x" path="res://assets/ui/tutorial_arrow_keys.png" id="1_pgr2e"]
 [ext_resource type="Texture2D" uid="uid://p8mrsrho6xma" path="res://assets/characters/main-menu.png" id="2_288ch"]
 [ext_resource type="Theme" uid="uid://df4ds2sll8g6l" path="res://ui/ui_theme.tres" id="2_ebau5"]
 [ext_resource type="Texture2D" uid="uid://b62esf4uluia1" path="res://assets/ui/tutorial_action.png" id="3_288ch"]
-[ext_resource type="Script" uid="uid://55x6qwftxh4f" path="res://scenes/tutorial.gd" id="4_ebau5"]
+[ext_resource type="Script" path="res://scenes/tutorial.gd" id="4_ebau5"]
 [ext_resource type="Material" uid="uid://lkqfpsrdqn7d" path="res://materials/transition.material" id="6_twv1b"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_pgr2e"]

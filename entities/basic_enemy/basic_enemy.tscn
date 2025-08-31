@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dpfmb1jollxg1"]
+[gd_scene load_steps=17 format=3 uid="uid://dpfmb1jollxg1"]
 
 [ext_resource type="Script" uid="uid://c1drxc2a676js" path="res://entities/basic_enemy/basic_enemy.gd" id="2_rwafm"]
 [ext_resource type="Script" uid="uid://dlm8eeyt0nr11" path="res://scripts/stats/stat.gd" id="3_ruxsg"]
@@ -16,11 +16,6 @@ script = ExtResource("3_ruxsg")
 baseValue = 1
 metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
 
-[sub_resource type="Resource" id="Resource_e4w74"]
-script = ExtResource("3_ruxsg")
-baseValue = 0
-metadata/_custom_type_script = "uid://dlm8eeyt0nr11"
-
 [sub_resource type="Resource" id="Resource_4n6jn"]
 script = ExtResource("3_ruxsg")
 baseValue = 1
@@ -31,7 +26,6 @@ script = ExtResource("4_vildc")
 health = SubResource("Resource_6if4x")
 strength = SubResource("Resource_4n6jn")
 defense = SubResource("Resource_4qd2v")
-speed = SubResource("Resource_e4w74")
 metadata/_custom_type_script = "uid://cdont5dqir2xk"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6if4x"]
@@ -100,7 +94,7 @@ stats = SubResource("Resource_m7qsk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6if4x")
-animation = &"face_up"
+animation = &"face_left"
 centered = false
 script = ExtResource("5_vildc")
 
