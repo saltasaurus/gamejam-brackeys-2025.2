@@ -17,11 +17,12 @@ func _ready() -> void:
 ## player_stats_updated signal
 func _on_card_selected(card: CardModifier) -> void:
 	for stat_mod in card.modifiers:
-		_update_stat(stat_mod)
+		update_stat(stat_mod)
+	
 	EventManager.emit_signal("player_stats_updated", stats)
 
-func _on_player_stat_modified(stat_mod: StatModifier):
-	_update_stat(stat_mod)
+func _on_player_stat_modified(_statmod: StatModifier):
+	update_stat(_statmod)
 	EventManager.emit_signal("player_stats_updated", stats)
 	
 func face_direction(dir: Vector2) -> void:

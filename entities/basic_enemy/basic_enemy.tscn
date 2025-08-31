@@ -100,7 +100,7 @@ stats = SubResource("Resource_m7qsk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6if4x")
-animation = &"face_up"
+animation = &"face_left"
 centered = false
 script = ExtResource("5_vildc")
 

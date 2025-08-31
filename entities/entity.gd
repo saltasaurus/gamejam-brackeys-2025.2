@@ -36,6 +36,9 @@ func play_melee_attack_anim(dir: Vector2) -> void:
 	tween = get_tree().create_tween()
 	tween.tween_property(self, "position", original_pos, 0.05)
 	await tween.finished
+	
+func update_stat(_statmod: StatModifier) -> void:
+	stats.update_stat(_statmod, null)
 
 func take_damage(damage: int) -> void:
 	if damage <= 0:

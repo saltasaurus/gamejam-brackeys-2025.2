@@ -23,6 +23,10 @@ func _init() -> void:
 	if defense != null:
 		defense._init()
 
+func update_stats(stat_mods: Array[StatModifier]) -> void:
+	for stat_mod in stat_mods:
+		update_stat(stat_mod, null)
+
 func update_stat(stats_mod: StatModifier, player_state_manager: TempStatManager) -> void:
 	var stat_type: Stat
 	match stats_mod.target:

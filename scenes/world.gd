@@ -290,19 +290,25 @@ func _create_and_place_enemies() -> void:
 		var picked_enemy = EnemySpawner.pick_object()
 		var e = picked_enemy.instantiate() as Enemy
 		#var e = basic_enemy_scene.instantiate() as Enemy
-		e.stats = _get_enemy_stats(e.stats)
+		var bonus_stats: Array[StatModifier] = _get_enemy_stats(e.stats)
+		for bonus_stat in bonus_stats:
+			e.update_stat(bonus_stat)
+		#e.stats.update_stats(bonus_stats)
 		e.position = cell * tile_size
 		add_child(e)
 		map.occupy(e.position, e)
 		
-func _get_enemy_stats(current_stats: CharacterStats) -> CharacterStats:
+func _get_enemy_stats(current_stats: CharacterStats) -> Array[StatModifier]:
+	var add_stats: Array[StatModifier] = []
 	# For each bonus stat count, create a random stat modification
 	for i in range(enemy_bonus_stats_count):
 		var stat_mod = StatModifier.new() 
 		var random_char_stat = randi_range(0, len(CharacterStats.Type) - 1)
 		stat_mod.initialize(1, StatModifier.Type.ADD, random_char_stat)
+		add_stats.append(stat_mod)
+	print("Adding ", len(add_stats), " stats to the enemy")
 
-	return current_stats
+	return add_stats
 
 func _create_and_place_entities() -> void:
 	for e in (get_tree().get_nodes_in_group(ENTITY_GROUP) as Array[Node2D]):
