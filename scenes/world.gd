@@ -267,6 +267,12 @@ func setup_world():
 	_create_and_place_chests()
 	_create_and_place_enemies()
 	_create_and_place_entities()
+	
+	var enemies = get_tree().get_nodes_in_group(ENEMY_GROUP)
+	for enemy in enemies:
+		var en = enemy as Enemy
+		print("Health: ", en.health, " | Health adjusted ", en.stats.health.adjustedValue)
+		print("Defense: ", en.stats.defense.baseValue, " | Defense adjusted: ", en.stats.defense.adjustedValue)
 
 func _add_next_enemy() -> void:
 	EnemySpawner.add_enemy()
@@ -294,6 +300,8 @@ func _create_and_place_enemies() -> void:
 		for bonus_stat in bonus_stats:
 			e.update_stat(bonus_stat)
 		#e.stats.update_stats(bonus_stats)
+		print("Should be new health: ", e.stats.health.adjustedValue)
+		print("Should be new defense: ", e.stats.defense.adjustedValue)
 		e.position = cell * tile_size
 		add_child(e)
 		map.occupy(e.position, e)
