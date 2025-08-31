@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://by7napo7uhogq"]
+[gd_scene load_steps=31 format=3 uid="uid://by7napo7uhogq"]
 
 [ext_resource type="Script" uid="uid://52hhmmwfyok7" path="res://scenes/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://bif3sw3n55pej" path="res://scenes/ui.tscn" id="2_0tnpc"]
@@ -187,6 +187,7 @@ theme = ExtResource("12_trtic")
 text = "Pick your plate...
 "
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Cards" parent="World/CardsCanvas/VBoxContainer" instance=ExtResource("11_kvpfn")]
 layout_mode = 2

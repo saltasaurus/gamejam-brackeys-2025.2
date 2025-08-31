@@ -399,5 +399,4 @@ func _on_player_died():
 	can_restart = true
 
 func _restart():
-	print("Restarting")
 	restart.emit()
